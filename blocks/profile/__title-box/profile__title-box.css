@@ -1,0 +1,7 @@
+.profile__title-box {
+  position: relative;
+  margin: 0;
+  display: grid;
+  width: fit-content;
+  max-width: calc(100% - 50px);
+}

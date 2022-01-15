@@ -1,0 +1,8 @@
+.element__info {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0;
+}

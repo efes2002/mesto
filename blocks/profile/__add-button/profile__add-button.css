@@ -1,0 +1,16 @@
+.profile__add-button {
+  margin: 0;
+  padding: 0;
+  grid-area: button;
+  display: grid;
+  justify-self: right;
+  align-self: center;
+}
+
+
+@media screen and (max-width: 900px) {
+  .profile__add-button {
+    justify-self: center;
+    padding: 36px 0 0 0;
+  }
+}

@@ -1,0 +1,15 @@
+.header {
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: auto auto;
+  grid-row-gap: 41px;
+  margin: 0;
+  padding: 45px 0 40px 0;
+}
+
+@media screen and (max-width: 900px) {
+  .header {
+    grid-row-gap: 31px;
+    padding: 28px 0 42px 0;
+  }
+}
