@@ -3,7 +3,100 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="pages/index.css">
+  <link rel="stylesheet" href="styles/fonts.css">
   <title>Mesto Russia</title>
 </head>
-   </body>
+  <body class="root">
+    <div class="page">
+      <header class="header">
+        <div class="logo logo_color_white"></div>
+        <div class="header__line"></div>
+      </header>
+      <main class="content">
+        <section class="profile">
+          <img class="profile__avatar" src="images/foto-fedar-konuxov.jpg" alt="Фотография аватара путешественника">
+          <div class="profile__info">
+            <div class="profile__title-box">
+              <h1 class="profile__name">Федор Конюхов</h1>
+              <button class="profile__edit-button cursor-hover"></button>
+            </div>
+            <p class="profile__job">Советский и российский путешественник, писатель, художник</p>
+          </div>
+          <div class="profile__add-button">
+            <button class="add-button cursor-hover"></button>
+          </div>
+        </section>
+        <section class="places">
+          <ul class="elements">
+            <li class="element">
+              <img class="element__img" src="images/foto-andaman-sea.jpg"
+                   alt="На фотографии гладь моря и небо">
+              <div class="element__info">
+                <h2 class="element__title">Андаманское море</h2>
+                <div class="element__like element__like_disabled"></div>
+              </div>
+            </li>
+            <li class="element">
+              <img class="element__img" src="images/foto-caribbean-sea.jpg"
+                   alt="На фотографии плывет черепаха в прозрачном море">
+              <div class="element__info">
+                <h2 class="element__title">Карибское море</h2>
+                <div class="element__like element__like_disabled"></div>
+              </div>
+            </li>
+            <li class="element">
+              <img class="element__img" src="images/foto-indian-ocean.jpg"
+                   alt="На фотографии стая крупных рыбок">
+              <div class="element__info">
+                <h2 class="element__title">Индийский океан</h2>
+                <div class="element__like element__like_disabled"></div>
+              </div>
+            </li>
+            <li class="element">
+              <img class="element__img" src="images/foto-red-sea.jpg"
+                   alt="На фотографии стая маленьких рыбок на фоне карала">
+              <div class="element__info">
+                <h2 class="element__title">Красное море</h2>
+                <div class="element__like element__like_disabled"></div>
+              </div>
+            </li>
+            <li class="element">
+              <img class="element__img" src="images/foto-tasman-sea.jpg"
+                   alt="На фотографии залив с высоты птичьего полета а внизу плывет лодка">
+              <div class="element__info">
+                <h2 class="element__title">Тасманово море</h2>
+                <div class="element__like element__like_disabled"></div>
+              </div>
+            </li>
+            <li class="element">
+              <img class="element__img" src="images/foto-Tatar-Strait.jpg"
+                   alt="На фотографии в пролив и по центру высокий скалистый остров">
+              <div class="element__info">
+                <h2 class="element__title">Татарский пролив</h2>
+                <div class="element__like element__like_disabled"></div>
+              </div>
+            </li>
+          </ul>
+        </section>
+      </main>
+      <footer class="footer">
+        <p class="footer__copyright">&copy; 2020 Mesto Russia</p>
+      </footer>
+    </div>
+  <div class="popup">
+    <div class="popup__container">
+      <form class="popup__form">
+        <h2 class="popup__title">Редактировать профиль</h2>
+        <input id="nameInput" class="popup__input" type="text" placeholder="1">
+        <div class="popup__line"></div>
+        <input id="jobInput" class="popup__input" type="text" placeholder="2">
+        <div class="popup__line"></div>
+        <button class="popup__button">Сохранить</button>
+      </form>
+      <div class="popup__button-x cursor-hover"></div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+  </body>
 </html>
