@@ -7,4 +7,4 @@
 Сайт выполнен на HTML и CSS, вся логика написана на javaScript.
 
 **Сылка на проект:**
-[Обычная ссылка](https://www.yandex.ru)
+[Проект Mesto](https://efes2002.github.io/mesto/)
