@@ -8,7 +8,7 @@
     "avatar info button";
   grid-column-gap: 30px;
   grid-auto-flow: column;
-  justify-items: start
+  justify-items: start;
 }
 
 @media screen and (max-width: 900px) {
