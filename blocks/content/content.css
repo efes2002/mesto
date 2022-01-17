@@ -6,3 +6,9 @@
   align-items: start;
   margin: 0;
 }
+
+@media screen and (max-width: 600px) {
+  .content {
+    grid-row-gap: 36px;
+  }
+}

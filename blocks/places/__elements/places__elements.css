@@ -1,4 +1,4 @@
-.elements {
+.places__elements {
   display: grid;
   margin: 0;
   padding: 0;
@@ -11,13 +11,13 @@
 }
 
 @media screen and (max-width: 900px) {
-  .elements {
+  .places__elements {
     grid-template-columns: repeat(2, auto);
   }
 }
 
 @media screen and (max-width: 600px) {
-  .elements {
+  .places__elements {
     grid-template-columns: repeat(1, auto);
   }
 }

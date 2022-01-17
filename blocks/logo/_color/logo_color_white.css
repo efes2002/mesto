@@ -1,3 +1,4 @@
 .logo_color_white {
   background: url(../../../images/logo-white.png) no-repeat;
+  background-size: contain;
 }
