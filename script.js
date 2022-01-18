@@ -19,8 +19,8 @@ function togglePopUp() {
 }
 
 function openPopUp() {
-  nameInput.setAttribute('value', nameElement.textContent);
-  jobInput.setAttribute('value', jobElement.textContent);
+  nameInput.value = nameElement.textContent;
+  jobInput.value = jobElement.textContent;
   togglePopUp();
 }
 
