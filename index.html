@@ -25,6 +25,7 @@
         </section>
         <section class="places">
           <ul class="places__elements">
+            <!--
             <li class="element">
               <img class="element__img" src="images/foto-andaman-sea.jpg"
                    alt="На фотографии гладь моря и небо">
@@ -73,6 +74,7 @@
                 <button class="element__like element__like_action" type="button" aria-label="Лайк"></button>
               </div>
             </li>
+            -->
           </ul>
         </section>
       </main>
@@ -80,17 +82,29 @@
         <p class="footer__copyright">&copy; 2020 Mesto Russia</p>
       </footer>
     </div>
-  <div class="popup">
-    <div class="popup__container">
-      <form class="popup__form" name="profileForm">
-        <h2 class="popup__title">Редактировать профиль</h2>
-        <input id="nameInput" name="name" class="popup__input" type="text" placeholder="Имя">
-        <input id="jobInput" name="job" class="popup__input" type="text" placeholder="Профессия">
-        <button class="popup__button" type="submit" aria-label="Сохранить">Сохранить</button>
-      </form>
-      <button class="popup__button-x cursor-hover" type="button" aria-label="Закрыть"></button>
-    </div>
-  </div>
-  <script src="script.js"></script>
+    <template id="template-card">
+      <li class="element">
+        <img class="element__img" src=""
+             alt="">
+        <div class="element__info">
+          <h2 class="element__title"></h2>
+          <button class="element__like" type="button" aria-label="Лайк"></button>
+        </div>
+      </li>
+    </template>
+    <template id="template-popup">
+      <div class="popup">
+        <div class="popup__container">
+          <form class="popup__form" name="profileForm">
+            <h2 class="popup__title"></h2>
+            <input id="input1" name="input1" class="popup__input" type="text" placeholder="">
+            <input id="input2" name="input2" class="popup__input" type="text" placeholder="">
+            <button class="popup__button" type="submit" aria-label="Сохранить"></button>
+          </form>
+          <button class="popup__button-x cursor-hover" type="button" aria-label=""></button>
+        </div>
+      </div>
+    </template>
+    <script src="script.js"></script>
   </body>
 </html>
