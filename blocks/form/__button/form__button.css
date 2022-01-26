@@ -1,4 +1,4 @@
-.popup__button {
+.form__button {
   margin: 47px 0 37px 0;
   padding: 0;
   border: 0;
@@ -18,13 +18,13 @@
   color: #FFFFFF;
 }
 
-.popup__button:hover {
+.form__button:hover {
   opacity: 0.8;
   cursor: pointer;
 }
 
 @media screen and (max-width: 600px) {
-  .popup__button {
+  .form__button {
     margin: 45px 0 37px 0;
     width: 238px;
     height: 46px;

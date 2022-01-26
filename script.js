@@ -32,13 +32,13 @@ const initialCards = [
 ];
 
 const popupProfile = {
-  popupName: 'popupProfile',
+  namePopup: 'popupProfile',
   titleText: 'Редактировать профиль',
   placeholder1: 'Имя',
   placeholder2: 'Профессия',
   labelText: 'Сохранить',
   elementButtonOpen: document.querySelector('.profile__edit-button'),
-  openFunction: function (popupElement) {
+  openFunction: (popupElement) => {
     const input1 = popupElement.querySelector('#input1');
     const input2 = popupElement.querySelector('#input2');
     const nameElement = document.querySelector('.profile__name');
@@ -46,7 +46,7 @@ const popupProfile = {
     input1.value = nameElement.textContent;
     input2.value = jobElement.textContent;
   },
-  submitFunction: function (event) {
+  submitFunction: (event) => {
     const nameElement = document.querySelector('.profile__name');
     const jobElement = document.querySelector('.profile__job');
     nameElement.textContent = event.target.input1.value;
@@ -61,46 +61,70 @@ const popupCard = {
   placeholder2: 'Ссылка на картинку',
   labelText: 'Создать',
   elementButtonOpen: document.querySelector('.profile__add-button'),
-  openFunction: function (popupElement) {
+  openFunction: (popupElement) => {
     const input1 = popupElement.querySelector('#input1');
     const input2 = popupElement.querySelector('#input2');
     input1.value = '';
     input2.value = '';
   },
-  submitFunction: function (event) {
+  submitFunction: (event) => {
     const card = [  {
       name: event.target.input1.value,
       link: event.target.input2.value,
       alt: 'Новая фотография от пользователя'
     }]
-    createCard (card);
+    creatingCard(card);
   }
 };
 
-function createPopup (arg) {
+function creatingPopup(contentElement, namePopup) {
 
-  const {popupName, titleText,
+  function creatingPopupDom() {
+    const scriptElement = document.querySelector('script');
+    const popupTemplateElement = document.querySelector('#template-popup').content;
+    const popupElement = popupTemplateElement.querySelector('.popup').cloneNode(true);
+    const popupContainerElement = popupElement.querySelector('.popup__container');
+    popupElement.setAttribute('id', namePopup);
+    popupContainerElement.prepend(contentElement);
+    scriptElement.before(popupElement);
+    return popupElement;
+  }
+
+  function closeOpenPopup(event) {
+    popupElement.classList.toggle('popup_opened');
+    // Если это временный попап то удалим его после закрытия (это относиться к карточкам мест)
+    if ((event) && ( event.target.parentElement.parentElement.id === 'card-view'))  {
+      event.target.parentElement.parentElement.remove();
+    }
+  }
+
+  const popupElement = creatingPopupDom();
+  const buttonX = popupElement.querySelector('.popup__button-x');
+  buttonX.addEventListener('click', closeOpenPopup);
+
+  return {popupElement:popupElement, closeOpenPopup};
+}
+
+function creatingPopupForm (arg) {
+  const { namePopup, titleText,
     placeholder1, placeholder2,
     labelText, elementButtonOpen,
     openFunction, submitFunction} = arg;
 
-  function create () {
-    const scriptElement = document.querySelector('script');
-    const popupTemplateElement = document.querySelector('#template-popup').content;
-    const popupElement = popupTemplateElement.querySelector('.popup').cloneNode(true);
-    popupElement.setAttribute('id', popupName);
-    popupElement.querySelector('.popup__title').textContent = titleText;
-    popupElement.querySelector('#input1').placeholder = placeholder1;
-    popupElement.querySelector('#input2').placeholder = placeholder2;
-    popupElement.querySelector('.popup__button').setAttribute('aria-label', labelText);
-    popupElement.querySelector('.popup__button').textContent = labelText;
-    scriptElement.after(popupElement);
-    return popupElement;
+  function creatingForm() {
+    const formTemplateElement = document.querySelector('#template-form').content;
+    const formElement = formTemplateElement.querySelector('.form').cloneNode(true);
+    formElement.querySelector('.form__title').textContent = titleText;
+    formElement.querySelector('#input1').placeholder = placeholder1;
+    formElement.querySelector('#input2').placeholder = placeholder2;
+    formElement.querySelector('.form__button').setAttribute('aria-label', labelText);
+    formElement.querySelector('.form__button').textContent = labelText;
+    return formElement;
   }
 
-  function closeOpenPopup() {
-    popupElement.classList.toggle('popup_opened');
-  }
+  const formElement = creatingForm();
+  const {popupElement, closeOpenPopup} = creatingPopup(formElement, namePopup);
+  const newFormElement = popupElement.querySelector('.form');
 
   function openPopup() {
     openFunction(popupElement);
@@ -113,32 +137,64 @@ function createPopup (arg) {
     closeOpenPopup();
   }
 
-  const popupElement = create();
-  const buttonX = popupElement.querySelector('.popup__button-x');
-  const formElement = popupElement.querySelector('.popup__form');
-
   elementButtonOpen.addEventListener('click', openPopup);
-  buttonX.addEventListener('click', closeOpenPopup);
-  formElement.addEventListener('submit', formSubmit);
+  newFormElement.addEventListener('submit', formSubmit);
 }
 
-function createCard (arg) {
+function creatingPopupCardView (cardElement) {
 
-  function create(item) {
+  function creatingCardViewDom() {
+    const link = cardElement.querySelector('.element__img').src;
+    const alt = cardElement.querySelector('.element__img').alt;
+    const name = cardElement.querySelector('.element__title').textContent;
+    const cardViewTemplateElement = document.querySelector('#template-card-view').content;
+    const cardViewElement = cardViewTemplateElement.querySelector('.element-view').cloneNode(true);
+    cardViewElement.querySelector('.element-view__img').setAttribute('src', link);
+    cardViewElement.querySelector('.element-view__img').alt = alt;
+    cardViewElement.querySelector('.element-view__title').textContent = name;
+    return cardViewElement;
+  }
+
+  const cardViewElement = creatingCardViewDom();
+  const {popupElement, closeOpenPopup} = creatingPopup(cardViewElement, 'card-view');
+  closeOpenPopup();
+}
+
+function creatingCard (arg) {
+
+  function creatingCardDom(item) {
     const {name, link, alt} = item;
     const placesElements = document.querySelector('.places__elements');
     const cardTemplateElement = document.querySelector('#template-card').content;
     const cardElement = cardTemplateElement.querySelector('.element').cloneNode(true);
-    cardElement.querySelector('.element__img').setAttribute('src', link);
-    cardElement.querySelector('.element__img').setAttribute('alt', alt);
+    cardElement.querySelector('.element__img').src = link;
+    cardElement.querySelector('.element__img').alt = alt;
     cardElement.querySelector('.element__title').textContent = name;
     placesElements.prepend(cardElement);
+
+    function openPopup() {
+      creatingPopupCardView(cardElement)
+    }
+    function deleteElement(event) {
+      event.target.parentElement.remove();
+    }
+    function toggleLike(event) {
+      event.target.classList.toggle('element__like_action');
+    }
+
+    const cardImgElement = cardElement.querySelector('.element__img');
+    const cardButtonDelete = cardElement.querySelector('.element__delete');
+    const cardButtonLike = cardElement.querySelector('.element__like');
+
+    cardImgElement.addEventListener('click', openPopup);
+    cardButtonDelete.addEventListener('click', deleteElement);
+    cardButtonLike.addEventListener('click', toggleLike);
   }
 
-  arg.forEach((item)=>{create(item)});
+  arg.forEach((item)=>{creatingCardDom(item)});
 }
 
-createPopup(popupProfile);
-createPopup(popupCard);
-createCard(initialCards);
+creatingPopupForm(popupProfile);
+creatingPopupForm(popupCard);
+creatingCard(initialCards);
 
