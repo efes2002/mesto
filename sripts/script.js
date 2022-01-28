@@ -2,6 +2,8 @@ const nameProfileElement = document.querySelector('.profile__name');
 const jobProfileElement = document.querySelector('.profile__job');
 const placesElements = document.querySelector('.places__elements');
 const cardViewElement = document.querySelector('#popup-card-view');
+const cardViewImg = cardViewElement.querySelector('.element-view__img');
+const cardViewTitle = cardViewElement.querySelector('.element-view__title');
 const buttonXCardViewElement = cardViewElement.querySelector('.popup__button-x');
 
 const popupProfile = {
@@ -28,11 +30,10 @@ const popupCard = {
     this.cardLink.value = '';
   },
   submitFunction: (event) => {
-    const cardElement =  createCard ({
+    renderCard ({
       name: event.target.cardName.value,
       link: event.target.cardLink.value
-    });
-    renderCard(cardElement);
+    }, placesElements);
   }
 };
 
@@ -66,13 +67,12 @@ function createCard(item) {
   return cardElement;
 }
 
-function renderCard(cardElement) {
-  placesElements.prepend(cardElement);
+function renderCard(item, parentElement) {
+  const cardElement = createCard(item);
+  parentElement.prepend(cardElement);
 }
 
 function editPopupCardView (name, link, alt) {
-  const cardViewImg = cardViewElement.querySelector('.element-view__img');
-  const cardViewTitle = cardViewElement.querySelector('.element-view__title');
   cardViewImg.src = link;
   cardViewImg.alt = alt;
   cardViewTitle.textContent = name;
@@ -121,8 +121,7 @@ function closePopup(popupElement) {
 
 function startInitialCards(){
   initialCards.forEach((item)=>{
-    const cardElement = createCard(item);
-    renderCard(cardElement);
+    renderCard(item, placesElements);
   });
 }
 
