@@ -47,8 +47,24 @@
       <div class="popup__container">
         <form class="form">
           <h2 class="form__title">Редактировать профиль</h2>
-          <input id="profileName" class="form__input" type="text" placeholder="Имя">
-          <input id="profileJob" class="form__input" type="text" placeholder="Профессия">
+          <label class="form__field">
+            <input id="profileName" class="form__input"
+                   type="text"
+                   placeholder="Имя"
+                   minlength="2"
+                   maxlength="40"
+                   required>
+            <span class="form__input-error">asdsad</span>
+          </label>
+          <label class="form__field">
+            <input id="profileJob" class="form__input"
+                   type="text"
+                   placeholder="Профессия"
+                   minlength="2"
+                   maxlength="200"
+                   required>
+            <span class="form__input-error"></span>
+          </label>
           <button class="form__button">Сохранить</button>
         </form>
         <div class="popup__button-x cursor-hover"></div>
@@ -58,8 +74,22 @@
       <div class="popup__container">
         <form class="form">
           <h2 class="form__title">Новое место</h2>
-          <input id="cardName" class="form__input" type="text" placeholder="Название">
-          <input id="cardLink" class="form__input" type="text" placeholder="Ссылка на картинку">
+          <label class="form__field">
+            <input id="cardName" class="form__input"
+                   type="text"
+                   placeholder="Название"
+                   minlength="2"
+                   maxlength="30"
+                   required>
+            <span class="form__input-error"></span>
+          </label>
+          <label class="form__field">
+            <input id="cardLink" class="form__input"
+                   type="url"
+                   placeholder="Ссылка на картинку"
+                   required>
+            <span class="form__input-error"></span>
+          </label>
           <button class="form__button">Создать</button>
         </form>
         <div class="popup__button-x cursor-hover"></div>
@@ -76,6 +106,7 @@
       </div>
     </div>
     <script src="sripts/initial-cards.js"></script>
+    <script src="sripts/validate.js"></script>
     <script src="sripts/script.js"></script>
   </body>
 </html>

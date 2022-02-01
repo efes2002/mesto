@@ -9,7 +9,7 @@ const buttonXCardViewElement = cardViewElement.querySelector('.popup__button-x')
 const popupProfile = {
   popupName: 'popup-edit-profile',
   elementButtonOpen: document.querySelector('.profile__edit-button'),
-  profileName: document.querySelector('#profileName'),
+  profileName: document.querySelector(`#profileName`),
   profileJob: document.querySelector('#profileJob'),
   openFunction: () => {
     this.profileName.value = nameProfileElement.textContent;
@@ -113,6 +113,25 @@ function setPopupForm(arg) {
 
 function openPopup(popupElement) {
   popupElement.classList.toggle('popup_opened');
+
+  const listenerClickOverlayPopupElement = (event)=>{
+    if (event.target.classList.contains('popup')) {
+      event.target.removeEventListener('click', listenerClickOverlayPopupElement);
+      closePopup(popupElement);
+    }
+  }
+
+  const listenerKeydownPopupElement = (event)=>{
+    if (event.key === "Escape") {
+      document.removeEventListener('keydown', listenerKeydownPopupElement);
+      closePopup(popupElement);
+
+    }
+  }
+
+  popupElement.addEventListener('click', listenerClickOverlayPopupElement);
+  document.addEventListener('keydown', listenerKeydownPopupElement)
+
 }
 
 function closePopup(popupElement) {
