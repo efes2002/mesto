@@ -16,7 +16,6 @@ const popupProfile = {
     this.profileJob.value = jobProfileElement.textContent;
     hideInputError(valueValidate, this.profileName);
     hideInputError(valueValidate, this.profileJob);
-    enableValidation(valueValidate);
   },
   submitFunction: (event) => {
     nameProfileElement.textContent = event.target.profileName.value;
@@ -33,7 +32,6 @@ const popupCard = {
     this.cardLink.value = '';
     hideInputError(valueValidate, this.cardName);
     hideInputError(valueValidate, this.cardLink);
-    enableValidation(valueValidate);
   },
   submitFunction: (event) => {
     renderCard ({
@@ -52,7 +50,7 @@ function createCard(item) {
     editPopupCardView(name, link, alt);
   }
   function deleteElement(event) {
-    event.target.parentElement.remove();
+    event.target.closest('.element').remove();
   }
   function toggleLike(event) {
     event.target.classList.toggle('element__like_action');
@@ -86,11 +84,9 @@ function editPopupCardView (name, link, alt) {
 }
 
 function setPopupCardView() {
-
   function closePopupCardView() {
     closePopup(cardViewElement)
   }
-
   buttonXCardViewElement.addEventListener('click', closePopupCardView);
 }
 
@@ -107,9 +103,12 @@ function setPopupForm(arg) {
     openPopup(popupElement);
   }
   function submitPopupForm(event) {
+    const buttonElement = popupElement.querySelector("button");
     event.preventDefault();
     arg.submitFunction(event);
     closePopup(popupElement);
+    toggleButtonAttributeDisabled(buttonElement);
+    toggleButtonClassInactive(valueValidate.inactiveButtonClass, buttonElement)
   }
 
   arg.elementButtonOpen.addEventListener('click', openPopupForm);
@@ -119,21 +118,6 @@ function setPopupForm(arg) {
 
 function openPopup(popupElement) {
   popupElement.classList.toggle('popup_opened');
-
-  const listenerClickOverlayPopupElement = (event)=>{
-    if (event.target.classList.contains('popup')) {
-      event.target.removeEventListener('click', listenerClickOverlayPopupElement);
-      closePopup(popupElement);
-    }
-  }
-  const listenerKeydownPopupElement = (event)=>{
-    if (event.key === "Escape") {
-      document.removeEventListener('keydown', listenerKeydownPopupElement);
-      closePopup(popupElement);
-    }
-  }
-  popupElement.addEventListener('click', listenerClickOverlayPopupElement);
-  document.addEventListener('keydown', listenerKeydownPopupElement)
 }
 
 function closePopup(popupElement) {
@@ -142,12 +126,30 @@ function closePopup(popupElement) {
 }
 
 function startInitialCards(){
-  initialCards.forEach((item)=>{
+  initialArds.forEach((item)=>{
     renderCard(item, placesElements);
   });
+}
+
+function setClosePopupEvents() {
+  function listenerClickOverlayPopupElement(event) {
+    const popupElement = document.querySelector('.popup_opened');
+    if ((popupElement)&&(popupElement === event.target)) {
+      closePopup(popupElement)
+    }
+  }
+  function listenerKeydownPopupElement(event) {
+    const popupElement = document.querySelector('.popup_opened');
+    if ((event.key === "Escape")&&(popupElement)) {
+      closePopup(popupElement)
+    }
+  }
+  document.addEventListener('click', listenerClickOverlayPopupElement);
+  document.addEventListener('keydown', listenerKeydownPopupElement);
 }
 
 startInitialCards();
 setPopupForm(popupProfile);
 setPopupForm(popupCard);
 setPopupCardView();
+setClosePopupEvents();

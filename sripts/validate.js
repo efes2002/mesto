@@ -28,9 +28,15 @@ function hasInvalidInput(inputList) {
 
 function toggleButtonState(arg, inputList, buttonElement) {
   if (hasInvalidInput(inputList)) {
-    buttonElement.classList.add(arg.inactiveButtonClass);
+    if (!buttonElement.classList.contains(arg.inactiveButtonClass)) {
+      toggleButtonClassInactive(arg.inactiveButtonClass, buttonElement);
+    }
+    if (!buttonElement.hasAttribute("disabled")) {toggleButtonAttributeDisabled(buttonElement);}
   } else {
-    buttonElement.classList.remove(arg.inactiveButtonClass);
+    if (buttonElement.classList.contains(arg.inactiveButtonClass)) {
+      toggleButtonClassInactive(arg.inactiveButtonClass, buttonElement);
+    }
+    if (buttonElement.hasAttribute("disabled")) {toggleButtonAttributeDisabled(buttonElement);}
   }
 };
 
@@ -56,4 +62,12 @@ function enableValidation(arg) {
   });
 };
 
+function toggleButtonAttributeDisabled(buttonElement) {
+    buttonElement.toggleAttribute("disabled");
+}
 
+function toggleButtonClassInactive(value, buttonElement) {
+  buttonElement.classList.toggle(value);
+}
+
+enableValidation(valueValidate);
