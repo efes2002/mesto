@@ -14,6 +14,9 @@ const popupProfile = {
   openFunction: () => {
     this.profileName.value = nameProfileElement.textContent;
     this.profileJob.value = jobProfileElement.textContent;
+    hideInputError(valueValidate, this.profileName);
+    hideInputError(valueValidate, this.profileJob);
+    enableValidation(valueValidate);
   },
   submitFunction: (event) => {
     nameProfileElement.textContent = event.target.profileName.value;
@@ -28,6 +31,9 @@ const popupCard = {
   openFunction: () => {
     this.cardName.value = '';
     this.cardLink.value = '';
+    hideInputError(valueValidate, this.cardName);
+    hideInputError(valueValidate, this.cardLink);
+    enableValidation(valueValidate);
   },
   submitFunction: (event) => {
     renderCard ({
@@ -120,22 +126,19 @@ function openPopup(popupElement) {
       closePopup(popupElement);
     }
   }
-
   const listenerKeydownPopupElement = (event)=>{
     if (event.key === "Escape") {
       document.removeEventListener('keydown', listenerKeydownPopupElement);
       closePopup(popupElement);
-
     }
   }
-
   popupElement.addEventListener('click', listenerClickOverlayPopupElement);
   document.addEventListener('keydown', listenerKeydownPopupElement)
-
 }
 
 function closePopup(popupElement) {
   popupElement.classList.toggle('popup_opened');
+
 }
 
 function startInitialCards(){
