@@ -118,11 +118,14 @@ function setPopupForm(arg) {
 
 function openPopup(popupElement) {
   popupElement.classList.toggle('popup_opened');
+  popupElement.addEventListener('click', listenerClickOverlayPopupElement);
+  document.addEventListener('keydown', listenerKeydownPopupElement);
 }
 
 function closePopup(popupElement) {
   popupElement.classList.toggle('popup_opened');
-
+  document.removeEventListener('keydown', listenerKeydownPopupElement);
+  popupElement.removeEventListener('click', listenerClickOverlayPopupElement);
 }
 
 function startInitialCards(){
@@ -131,25 +134,24 @@ function startInitialCards(){
   });
 }
 
-function setClosePopupEvents() {
-  function listenerClickOverlayPopupElement(event) {
-    const popupElement = document.querySelector('.popup_opened');
-    if ((popupElement)&&(popupElement === event.target)) {
-      closePopup(popupElement)
-    }
+function listenerClickOverlayPopupElement(event) {
+  const popupElement = document.querySelector('.popup_opened')
+  if ((popupElement)&&(popupElement === event.target)) {
+    closePopup(popupElement);
+    popupElement.removeEventListener('click', listenerClickOverlayPopupElement);
+    document.removeEventListener('keydown', listenerKeydownPopupElement);
   }
-  function listenerKeydownPopupElement(event) {
-    const popupElement = document.querySelector('.popup_opened');
-    if ((event.key === "Escape")&&(popupElement)) {
-      closePopup(popupElement)
-    }
+}
+function listenerKeydownPopupElement(event) {
+  if (event.key === "Escape") {
+    const popupElement = document.querySelector('.popup_opened')
+    closePopup(popupElement);
+    document.removeEventListener('keydown', listenerKeydownPopupElement);
+    popupElement.removeEventListener('click', listenerClickOverlayPopupElement);
   }
-  document.addEventListener('click', listenerClickOverlayPopupElement);
-  document.addEventListener('keydown', listenerKeydownPopupElement);
 }
 
 startInitialCards();
 setPopupForm(popupProfile);
 setPopupForm(popupCard);
 setPopupCardView();
-setClosePopupEvents();
