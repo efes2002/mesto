@@ -138,16 +138,12 @@ function listenerClickOverlayPopupElement(event) {
   const popupElement = document.querySelector('.popup_opened')
   if ((popupElement)&&(popupElement === event.target)) {
     closePopup(popupElement);
-    popupElement.removeEventListener('click', listenerClickOverlayPopupElement);
-    document.removeEventListener('keydown', listenerKeydownPopupElement);
   }
 }
 function listenerKeydownPopupElement(event) {
   if (event.key === "Escape") {
     const popupElement = document.querySelector('.popup_opened')
     closePopup(popupElement);
-    document.removeEventListener('keydown', listenerKeydownPopupElement);
-    popupElement.removeEventListener('click', listenerClickOverlayPopupElement);
   }
 }
 
