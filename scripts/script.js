@@ -22,6 +22,7 @@ const popupProfile = {
     jobProfileElement.textContent = event.target.profileJob.value;
   }
 };
+
 const popupCard = {
   popupName: 'popup-add-card',
   elementButtonOpen: document.querySelector('.profile__add-button'),
@@ -128,8 +129,8 @@ function closePopup(popupElement) {
   popupElement.removeEventListener('click', listenerClickOverlayPopupElement);
 }
 
-function startInitialCards(){
-  initialArds.forEach((item)=>{
+function startInitialCards() {
+  initialCards.forEach((item)=>{
     renderCard(item, placesElements);
   });
 }
