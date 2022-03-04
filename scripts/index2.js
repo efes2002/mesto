@@ -1,7 +1,14 @@
 const placesElements = document.querySelector('.places__elements');
 const cardTemplateElement = document.querySelector('#template-card').content;
 
-
+const valueValidate = {
+  formSelector: '.form',
+  inputSelector: '.form__input',
+  submitButtonSelector: '.form__button',
+  inactiveButtonClass: 'form__button_disabled',
+  inputErrorClass: 'form__input_type_error',
+  errorClass: 'form__error_visible'
+}
 const initialCards = [
   {
     name: 'Архыз',
@@ -29,35 +36,51 @@ const initialCards = [
   }
 ];
 
+const settingsPopUpProfile = {
+  nameClassPopUp: 'popup-edit-profile',
+  nameClassPopUpOpen: 'popup_opened',
+  nameClassPopUpButtonX: 'popup__button-x',
+  nameClassButtonOpenPopUp:'profile__edit-button',
+  nameClassPopUpForm: 'form',
+  nameClassPopUpFormButton: 'form__button',
+  nameClassPopUpFormInput1: '#profileName',
+  nameClassPopUpFormInput2: '#profileJob',
 
-const popupProfile = {
-  popupName: 'popup-edit-profile',
-  elementButtonOpen: document.querySelector('.profile__edit-button'),
-  profileName: document.querySelector(`#profileName`),
-  profileJob: document.querySelector('#profileJob'),
   openFunction: () => {
-    this.profileName.value = nameProfileElement.textContent;
-    this.profileJob.value = jobProfileElement.textContent;
-    hideInputError(valueValidate, this.profileName);
-    hideInputError(valueValidate, this.profileJob);
+    const profileName = document.querySelector(`${this.nameClassPopUpFormInput1}`);
+    const profileJob = document.querySelector(`${this.nameClassPopUpFormInput2}`);
+    profileName.value = nameProfileElement.textContent;
+    profileJob.value = jobProfileElement.textContent;
+    hideInputError(valueValidate, profileName);
+    hideInputError(valueValidate, profileJob);
   },
+
   submitFunction: (event) => {
     nameProfileElement.textContent = event.target.profileName.value;
     jobProfileElement.textContent = event.target.profileJob.value;
   }
 };
 
-const popupCard = {
-  popupName: 'popup-add-card',
-  elementButtonOpen: document.querySelector('.profile__add-button'),
-  cardName: document.querySelector('#cardName'),
-  cardLink: document.querySelector('#cardLink'),
+const settingsPopUpCard = {
+  nameClassPopUp: 'popup-add-card',
+  nameClassPopUpOpen: 'popup_opened',
+  nameClassPopUpButtonX: 'popup__button-x',
+  nameClassButtonOpenPopUp:'profile__add-button',
+  nameClassPopUpForm: 'form',
+  nameClassPopUpFormButton: 'form__button',
+  nameClassPopUpFormButtonDisabled: 'disabled',
+  nameClassPopUpFormInput1: '#cardName',
+  nameClassPopUpFormInput2: '#cardLink',
+
   openFunction: () => {
-    this.cardName.value = '';
-    this.cardLink.value = '';
-    hideInputError(valueValidate, this.cardName);
-    hideInputError(valueValidate, this.cardLink);
+    const cardName = document.querySelector(`${this.nameClassPopUpFormInput1}`);
+    const cardLink = document.querySelector(`${this.nameClassPopUpFormInput2}`);
+    cardName.value = '';
+    cardLink.value = '';
+    hideInputError(valueValidate, cardName);
+    hideInputError(valueValidate, cardLink);
   },
+
   submitFunction: (event) => {
     renderCard ({
       name: event.target.cardName.value,
@@ -66,105 +89,108 @@ const popupCard = {
   }
 };
 
+const settingsPopUpCardView = {
+  nameClassPopUp: 'popup-card-view',
+  nameClassPopUpOpen: 'popup_opened',
+  nameClassPopUpButtonX: 'popup__button-x',
+}
 
 /*Создаем классы для попапов*/
 
 class PopUp {
-  constructor() {}
 
-  openPopup(popupElement) {
-    popupElement.classList.toggle('popup_opened');
-    popupElement.addEventListener('click', this._listenerClickOverlayPopupElement);
-    document.addEventListener('keydown', this._listenerKeydownPopupElement);
+  constructor(settings) {
+    this._popupElement = document.querySelector(`.${settings.nameClassPopUp}`);
+    this._buttonXElement = this._popupElement.querySelector(`.${settings.nameClassPopUpButtonX}`);
+    this._nameClassPopUpOpen = settings.nameClassPopUpOpen;
+    this._arg = settings;
   }
 
-  closePopup(popupElement) {
-    popupElement.classList.toggle('popup_opened');
+  _openPopup() {
+    this._popupElement.classList.toggle(this._nameClassPopUpOpen);
+    this._popupElement.addEventListener('click', this._listenerClickOverlayPopupElement);
+    document.addEventListener('keydown', this._listenerKeydownPopupElement);
+    this._buttonXElement.addEventListener('click', this._listenerPushButtonXElement);
+  }
+
+  _closePopup() {
+    this._popupElement.classList.toggle(this._nameClassPopUpOpen);
     document.removeEventListener('keydown', this._listenerKeydownPopupElement);
-    popupElement.removeEventListener('click', this._listenerClickOverlayPopupElement);
+    this._popupElement.removeEventListener('click', this._listenerClickOverlayPopupElement);
+    this._buttonXElement.removeEventListener('click', this._listenerPushButtonXElement);
   }
 
   _listenerClickOverlayPopupElement(event) {
-    const popupElement = document.querySelector('.popup_opened')
-    if ((popupElement) && (popupElement === event.target)) {
-      this._closePopup(popupElement);
+    if ((this._popupElement) && (this._popupElement === event.target)) {
+      this._closePopup();
     }
   }
 
   _listenerKeydownPopupElement(event) {
     if (event.key === "Escape") {
-      const popupElement = document.querySelector('.popup_opened')
-      this._closePopup(popupElement);
+      this._closePopup();
     }
   }
+
+  _listenerPushButtonXElement() {
+    this._closePopup();
+  }
+
 }
 
 class PopUpCardView extends PopUp {
-  constructor() {
-    super();
+
+  constructor(settings) {
+    super(settings);
   }
-  setPopup() {
-    function closePopupCardView() {
-      super._closePopup(cardViewElement)
-    }
-    buttonXCardViewElement.addEventListener('click', closePopupCardView);
+
+  openPopupCardView(name, link, alt) {
+    cardViewImg.src = link;
+    cardViewImg.alt = alt;
+    cardViewTitle.textContent = name;
+    super._openPopup();
   }
+
 }
 
 class PopUpForm extends PopUp {
-  constructor(arg) {
-    super();
-    this._arg = arg;
+
+  constructor(settings) {
+    super(settings);
+    this._formElement = this._popupElement.querySelector(`.${settings.nameClassPopUpForm}`);
+    this._formButtonElement = this._popupElement.querySelector(`.${settings.nameClassPopUpFormButton}`);
+    this._buttonOpenElement = document.querySelector(`.${settings.nameClassButtonOpenPopUp}`);
+    this._nameClassPopUpFormButtonDisabled = settings.nameClassPopUpFormButtonDisabled;
   }
 
-  setPopUpForm() {
-    const popupElement = document.querySelector(`#${this._arg.popupName}`);
-    const buttonXElement = popupElement.querySelector('.popup__button-x');
-    const buttonSubmit = popupElement.querySelector('.form');
-
-    function closePopupForm() {
-      super._closePopup(popupElement);
-    }
-    function openPopupForm() {
-      this._arg.openFunction();
-      super._openPopup(popupElement);
-    }
-    function submitPopupForm(event) {
-      const buttonElement = popupElement.querySelector("button");
-      event.preventDefault();
-      this._arg.submitFunction(event);
-      super._closePopup(popupElement);
-      buttonElement.toggleAttribute("disabled");
-      buttonElement.classList.toggle(valueValidate.inactiveButtonClass);
-    }
-    this._arg.elementButtonOpen.addEventListener('click', openPopupForm);
-    buttonXElement.addEventListener('click', closePopupForm);
-    buttonSubmit.addEventListener('submit', submitPopupForm);
-  }
-}
-
-class PopUpCardForm extends PopUpForm {
-  constructor() {
-    super();
-
-  }
-}
-
-class PopUpProfileForm extends PopUpForm {
-  constructor() {
-    super();
+  _submitPopupForm(event) {
+    event.preventDefault();
+    this._arg.submitFunction(event);
+    super._closePopup();
+    this._formButtonElement.toggleAttribute(`${this._nameClassPopUpFormButtonDisabled}`);
+    this._formButtonElement.classList.toggle(valueValidate.inactiveButtonClass);
   }
 
+  _openPopupForm() {
+    this._arg.openFunction();
+    super._openPopup();
+  }
 
+  setPopUp() {
+    this._buttonOpenElement.addEventListener('click', this._openPopupForm);
+    this._formElement.addEventListener('submit', this._submitPopupForm);
+  }
 }
 
 /*Наполняем свойствами наши попапы используя классы*/
 
-const popUpCardView = new PopUpCardView();
+const popUpCardView = new PopUpCardView(settingsPopUpCardView);
 
-const popUpProfile = new PopUpCardForm(popupProfile);
+const popUpProfile = new PopUpForm(settingsPopUpProfile);
+popUpProfile.setPopUp();
 
-const popUpCard = new PopUpCardForm(popupCard);
+const popUpCard = new PopUpForm(settingsPopUpCard);
+popUpCard.setPopUp();
 
 
 /*Создаем классы для карточек мест*/
@@ -183,18 +209,8 @@ class Card {
     this._cardElement.querySelector('.element__title').textContent = this._name;
   }
 
-  _editPopupCardView (name, link, alt) {
-    const cardViewElement = document.querySelector('#popup-card-view');
-    const cardViewImg = cardViewElement.querySelector('.element-view__img');
-    const cardViewTitle = cardViewElement.querySelector('.element-view__title');
-    cardViewImg.src = link;
-    cardViewImg.alt = alt;
-    cardViewTitle.textContent = name;
-    this._openPopup(cardViewElement);
-  }
-
   _openPopup() {
-    this._editPopupCardView(this._name, this._link, this._alt);
+    popUpCardView.openPopupCardView(this._name, this._link, this._alt);
   }
 
   _deleteElement(event) {
@@ -221,29 +237,6 @@ class Card {
     return this._cardElement;
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 function renderCard(item, parentElement) {
