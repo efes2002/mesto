@@ -67,8 +67,107 @@ const popupCard = {
 };
 
 
+/*Создаем классы для попапов*/
+
+class PopUp {
+  constructor() {}
+
+  openPopup(popupElement) {
+    popupElement.classList.toggle('popup_opened');
+    popupElement.addEventListener('click', this._listenerClickOverlayPopupElement);
+    document.addEventListener('keydown', this._listenerKeydownPopupElement);
+  }
+
+  closePopup(popupElement) {
+    popupElement.classList.toggle('popup_opened');
+    document.removeEventListener('keydown', this._listenerKeydownPopupElement);
+    popupElement.removeEventListener('click', this._listenerClickOverlayPopupElement);
+  }
+
+  _listenerClickOverlayPopupElement(event) {
+    const popupElement = document.querySelector('.popup_opened')
+    if ((popupElement) && (popupElement === event.target)) {
+      this._closePopup(popupElement);
+    }
+  }
+
+  _listenerKeydownPopupElement(event) {
+    if (event.key === "Escape") {
+      const popupElement = document.querySelector('.popup_opened')
+      this._closePopup(popupElement);
+    }
+  }
+}
+
+class PopUpCardView extends PopUp {
+  constructor() {
+    super();
+  }
+  setPopup() {
+    function closePopupCardView() {
+      super._closePopup(cardViewElement)
+    }
+    buttonXCardViewElement.addEventListener('click', closePopupCardView);
+  }
+}
+
+class PopUpForm extends PopUp {
+  constructor(arg) {
+    super();
+    this._arg = arg;
+  }
+
+  setPopUpForm() {
+    const popupElement = document.querySelector(`#${this._arg.popupName}`);
+    const buttonXElement = popupElement.querySelector('.popup__button-x');
+    const buttonSubmit = popupElement.querySelector('.form');
+
+    function closePopupForm() {
+      super._closePopup(popupElement);
+    }
+    function openPopupForm() {
+      this._arg.openFunction();
+      super._openPopup(popupElement);
+    }
+    function submitPopupForm(event) {
+      const buttonElement = popupElement.querySelector("button");
+      event.preventDefault();
+      this._arg.submitFunction(event);
+      super._closePopup(popupElement);
+      buttonElement.toggleAttribute("disabled");
+      buttonElement.classList.toggle(valueValidate.inactiveButtonClass);
+    }
+    this._arg.elementButtonOpen.addEventListener('click', openPopupForm);
+    buttonXElement.addEventListener('click', closePopupForm);
+    buttonSubmit.addEventListener('submit', submitPopupForm);
+  }
+}
+
+class PopUpCardForm extends PopUpForm {
+  constructor() {
+    super();
+
+  }
+}
+
+class PopUpProfileForm extends PopUpForm {
+  constructor() {
+    super();
+  }
 
 
+}
+
+/*Наполняем свойствами наши попапы используя классы*/
+
+const popUpCardView = new PopUpCardView();
+
+const popUpProfile = new PopUpCardForm(popupProfile);
+
+const popUpCard = new PopUpCardForm(popupCard);
+
+
+/*Создаем классы для карточек мест*/
 
 class Card {
   constructor(data, cardTemplateElement){
@@ -126,100 +225,19 @@ class Card {
 
 
 
-class popUp {
-  constructor() {}
-
-  openPopup(popupElement) {
-    popupElement.classList.toggle('popup_opened');
-    popupElement.addEventListener('click', this._listenerClickOverlayPopupElement);
-    document.addEventListener('keydown', this._listenerKeydownPopupElement);
-  }
-
-  closePopup(popupElement) {
-    popupElement.classList.toggle('popup_opened');
-    document.removeEventListener('keydown', this._listenerKeydownPopupElement);
-    popupElement.removeEventListener('click', this._listenerClickOverlayPopupElement);
-  }
-
-  _listenerClickOverlayPopupElement(event) {
-    const popupElement = document.querySelector('.popup_opened')
-    if ((popupElement) && (popupElement === event.target)) {
-      this._closePopup(popupElement);
-    }
-  }
-
-  _listenerKeydownPopupElement(event) {
-    if (event.key === "Escape") {
-      const popupElement = document.querySelector('.popup_opened')
-      this._closePopup(popupElement);
-    }
-  }
-}
 
 
 
 
-class popUpCardView extends popUp {
-  constructor() {
-    super();
-  }
-  setPopup() {
-    function closePopupCardView() {
-      super._closePopup(cardViewElement)
-    }
-    buttonXCardViewElement.addEventListener('click', closePopupCardView);
-  }
-}
 
 
 
-class popUpForm extends popUp {
-  constructor(arg) {
-    super();
-    this._arg = arg;
-  }
-
-  setPopUpForm() {
-    const popupElement = document.querySelector(`#${this._arg.popupName}`);
-    const buttonXElement = popupElement.querySelector('.popup__button-x');
-    const buttonSubmit = popupElement.querySelector('.form');
-
-    function closePopupForm() {
-      super._closePopup(popupElement);
-    }
-    function openPopupForm() {
-      this._arg.openFunction();
-      super._openPopup(popupElement);
-    }
-    function submitPopupForm(event) {
-      const buttonElement = popupElement.querySelector("button");
-      event.preventDefault();
-      this._arg.submitFunction(event);
-      super._closePopup(popupElement);
-      buttonElement.toggleAttribute("disabled");
-      buttonElement.classList.toggle(valueValidate.inactiveButtonClass);
-    }
-    this._arg.elementButtonOpen.addEventListener('click', openPopupForm);
-    buttonXElement.addEventListener('click', closePopupForm);
-    buttonSubmit.addEventListener('submit', submitPopupForm);
-  }
-}
 
 
-class popUpCardForm extends popUpForm {
-  constructor() {
-    super();
-
-  }
-}
-
-class popUpProfileForm extends popUpForm {
-  constructor() {
-    super();
-  }
 
 
-}
+
+
 
 
 
