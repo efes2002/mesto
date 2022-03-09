@@ -1,7 +1,4 @@
-import {PopUpCardView} from "./PopUpCardView.js";
-import {settingsPopUpCardView} from "./constants.js";
-
-const popUpCardView = new PopUpCardView(settingsPopUpCardView);
+import {openPopupCardView} from "./index.js";
 
 export class Card {
   constructor(data, settingsCard){
@@ -15,7 +12,6 @@ export class Card {
     this._elementCardButtonLike = this._cardElement.querySelector(`.${settingsCard.nameClassCardButtonLike}`);
     this._nameClassCardImg = settingsCard.nameClassCardImg;
     this._nameClassCardTitle = settingsCard.nameClassCardTitle;
-    this._nameClassCardElement = settingsCard.nameClassCardElement;
     this._nameClassCardButtonLikeAction= settingsCard.nameClassCardButtonLikeAction;
     this._name = data.name;
     this._link = data.link;
@@ -29,23 +25,22 @@ export class Card {
     this._elementCardText.textContent = this._name;
   }
 
-  _openPopup(event) {
-    const cardElement = event.target.parentElement;
-    popUpCardView.openPopupCardView(cardElement, this._nameClassCardImg, this._nameClassCardTitle);
+  _openPopup() {
+    openPopupCardView(this._cardElement, this._nameClassCardImg, this._nameClassCardTitle);
   }
 
-  _deleteElement(event) {
-    event.target.closest(`.${this._nameClassCardElement}`).remove();
+  _deleteElement() {
+    this._cardElement.remove();
   }
 
-  _toggleLike(event) {
-    event.target.classList.toggle(this._nameClassCardButtonLikeAction);
+  _toggleLike() {
+    this._elementCardButtonLike.classList.toggle(this._nameClassCardButtonLikeAction);
   }
 
   _addEventListener() {
-    this._elementCardImg.addEventListener('click', (event)=>{this._openPopup(event)});
-    this._elementCardButtonDelete.addEventListener('click', (event)=>{this._deleteElement(event)});
-    this._elementCardButtonLike.addEventListener('click', (event)=>{this._toggleLike(event)});
+    this._elementCardImg.addEventListener('click', ()=>{this._openPopup()});
+    this._elementCardButtonDelete.addEventListener('click', ()=>{this._deleteElement()});
+    this._elementCardButtonLike.addEventListener('click', ()=>{this._toggleLike()});
   }
 
   setCardElement() {

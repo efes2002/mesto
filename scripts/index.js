@@ -1,161 +1,138 @@
 import { Card } from './Card.js';
-import {initialCards, settingsCard, settingsPopUpProfile, settingsPopUpCard, settingsValidate} from './constants.js';
-import {Validator} from "./Validator.js";
+import {initialCards, settingsCard,
+  settingsPopUpProfile, settingsPopUpCard,
+  settingsPopUpCardView,settingsValidate} from './constants.js';
+import {FormValidator} from "./FormValidator.js";
 
-function popUp(settings) {
+function openPopup(popupElement) {
+  const buttonXElement = popupElement.querySelector('.popup__button-x');
+  popupElement.addEventListener('click', listenerClickOverlayPopupElement);
+  document.addEventListener('keydown', listenerKeydownPopupElement);
+  buttonXElement.addEventListener('click', listenerPushButtonXElement);
+  popupElement.classList.toggle('popup_opened');
+}
 
+function closePopup(popupElement) {
+  popupElement.classList.toggle('popup_opened');
+  document.removeEventListener('keydown', listenerKeydownPopupElement);
+  popupElement.removeEventListener('click', listenerClickOverlayPopupElement);
+  popupElement.removeEventListener('click', listenerPushButtonXElement);
+}
 
+function listenerClickOverlayPopupElement(event) {
+  const popupElement = document.querySelector('.popup_opened');
+  if ((popupElement) && (popupElement === event.target)) {
+    closePopup(popupElement);
+  }
+}
+
+function listenerKeydownPopupElement(event) {
+  const popupElement = document.querySelector('.popup_opened');
+  if (event.key === "Escape") {
+    closePopup(popupElement);
+  }
+}
+
+function listenerPushButtonXElement() {
+  const popupElement = document.querySelector('.popup_opened');
+  closePopup(popupElement);
+}
+
+export function openPopupCardView(elementCard, nameClassCardImg, nameClassCardTitle) {
+  const settings = settingsPopUpCardView;
+  const elementPopUpPopUpCardView = document.querySelector(`#${settings.nameIdPopUp}`);
+  const elementPopUpImg = elementPopUpPopUpCardView.querySelector(`.${settings.nameClassPopUpImg}`);
+  const elementPopUpTitle = elementPopUpPopUpCardView.querySelector(`.${settings.nameClassPopUpTitle}`);
+  const elementCardImg = elementCard.querySelector(`.${nameClassCardImg}`);
+  const elementCardText = elementCard.querySelector(`.${nameClassCardTitle}`);
+  const name = elementCardText.textContent;
+  const link = elementCardImg.src;
+  const alt = elementCardImg.alt;
+
+  elementPopUpImg.src = link;
+  elementPopUpImg.alt = alt;
+  elementPopUpTitle.textContent = name;
+  openPopup(elementPopUpPopUpCardView);
+}
+
+function submitPopupForm(settings) {
   const popupElement = document.querySelector(`#${settings.nameIdPopUp}`);
-  const buttonXElement = popupElement.querySelector(`.${settings.nameClassPopUpButtonX}`);
-  const nameClassPopUpOpen = settings.nameClassPopUpOpen;
-
-
-  function openPopup() {
-    popupElement.addEventListener('click', listenerClickOverlayPopupElement);
-    document.addEventListener('keydown', listenerKeydownPopupElement);
-    buttonXElement.addEventListener('click', listenerPushButtonXElement);
-    popupElement.classList.toggle(nameClassPopUpOpen);
-  }
-
-  function closePopup() {
-    popupElement.classList.toggle(nameClassPopUpOpen);
-    document.removeEventListener('keydown', listenerKeydownPopupElement);
-    popupElement.removeEventListener('click', listenerClickOverlayPopupElement);
-    popupElement.removeEventListener('click', listenerPushButtonXElement);
-  }
-
-  function listenerClickOverlayPopupElement (event) {
-    if ((popupElement) && (popupElement === event.target)) {
-      closePopup(popupElement);
-    }
-  }
-
-  function listenerKeydownPopupElement (event) {
-    if (event.key === "Escape") {
-      closePopup(popupElement);
-    }
-  }
-
-  function listenerPushButtonXElement() {
-    closePopup();
-  }
-
+  const formButtonElement = popupElement.querySelector(`.${settings.nameClassPopUpFormButton}`);
+  const nameClassPopUpFormButtonDisabled = settings.nameClassPopUpFormButtonDisabled;
+  closePopup(popupElement);
+  formButtonElement.toggleAttribute(`${nameClassPopUpFormButtonDisabled}`);
+  formButtonElement.classList.toggle(settingsValidate.inactiveButtonClass);
 }
 
-export class PopUpCardView extends PopUp {
+function setPopupCard(settings) {
+  const popupElement = document.querySelector(`#${settings.nameIdPopUp}`);
+  const buttonOpenElement = document.querySelector(`.${settings.nameClassButtonOpenPopUp}`);
+  const formElement = popupElement.querySelector(`.${settings.nameClassPopUpForm}`);
 
-  constructor(settings) {
-    super(settings);
-    this._elementPopUpPopUpCardView = document.querySelector(`#${settings.nameIdPopUp}`);
-    this._elementPopUpImg = this._elementPopUpPopUpCardView.querySelector(`.${settings.nameClassPopUpImg}`);
-    this._elementPopUpTitle = this._elementPopUpPopUpCardView.querySelector(`.${settings.nameClassPopUpTitle}`);
-  }
-
-  openPopupCardView(elementCard, nameClassCardImg, nameClassCardTitle) {
-    const elementCardImg = elementCard.querySelector(`.${nameClassCardImg}`);
-    const elementCardText = elementCard.querySelector(`.${nameClassCardTitle}`);
-    const name = elementCardText.textContent;
-    const link = elementCardImg.src;
-    const alt = elementCardImg.alt;
-    this._elementPopUpImg.src = link;
-    this._elementPopUpImg.alt = alt;
-    this._elementPopUpTitle.textContent = name;
-    super._openPopup();
-  }
-
-}
-
-class PopUpForm extends PopUp {
-  constructor(settings) {
-    super(settings);
-    this._formElement = this._popupElement.querySelector(`.${settings.nameClassPopUpForm}`);
-    this._formButtonElement = this._popupElement.querySelector(`.${settings.nameClassPopUpFormButton}`);
-    this._buttonOpenElement = document.querySelector(`.${settings.nameClassButtonOpenPopUp}`);
-    this._nameClassPopUpFormButtonDisabled = settings.nameClassPopUpFormButtonDisabled;
-    this._nameIdPopUpFormInput1 = settings.nameIdPopUpFormInput1;
-    this._nameIdPopUpFormInput2 = settings.nameIdPopUpFormInput2;
-    this._elementPopUpProfileInput1 = document.querySelector(`#${this._nameIdPopUpFormInput1}`);
-    this._elementPopUpprofileInput2 = document.querySelector(`#${this._nameIdPopUpFormInput2}`);
-  }
-
-  _submitPopupForm () {
-    super._closePopup();
-    this._formButtonElement.toggleAttribute(`${this._nameClassPopUpFormButtonDisabled}`);
-    this._formButtonElement.classList.toggle(settingsValidate.inactiveButtonClass);
-  }
-
-  _openPopUpForm() {
-    let firstStart = true;
-    let classValidation = {};
-    if (firstStart) {
-      classValidation = new Validator(settingsValidate, this._formElement);
-      classValidation.enableValidation();
-      firstStart = false;
-    }
-    classValidation.startHideInputError(this._elementPopUpProfileInput1);
-    classValidation.startHideInputError(this._elementPopUpprofileInput2);
-    super._openPopup();
-  }
-}
-
-class PopUpFormCard extends PopUpForm {
-  constructor(settings) {
-    super(settings);
-  }
-
-  _openPopupForm = () => {
-    this._elementPopUpProfileInput1.value = '';
-    this._elementPopUpprofileInput2.value = '';
-    super._openPopUpForm();
-  }
-
-  _submitPopupForm = (event) => {
+  function submitPopupFormCard(event) {
+    const nameIdPopUpFormInput1 = settings.nameIdPopUpFormInput1;
+    const nameIdPopUpFormInput2 = settings.nameIdPopUpFormInput2;
     event.preventDefault();
     renderCard ({
-      name: event.target[this._nameIdPopUpFormInput1].value,
-      link: event.target[this._nameIdPopUpFormInput2].value
+      name: event.target[nameIdPopUpFormInput1].value,
+      link: event.target[nameIdPopUpFormInput2].value
     });
-    super._submitPopupForm();
+    submitPopupForm(settings);
   }
 
-  setPopUp() {
-    this._buttonOpenElement.addEventListener('click', this._openPopupForm);
-    this._formElement.addEventListener('submit', this._submitPopupForm);
+  function openPopupFormCard() {
+    const elementPopUpProfileInput1 = document.querySelector(`#${settings.nameIdPopUpFormInput1}`);
+    const elementPopUpprofileInput2 = document.querySelector(`#${settings.nameIdPopUpFormInput2}`);
+    elementPopUpProfileInput1.value = '';
+    elementPopUpprofileInput2.value = '';
+    popUpCardValidator.startHideInputError(elementPopUpProfileInput1);
+    popUpCardValidator.startHideInputError(elementPopUpprofileInput2);
+    openPopup(popupElement);
   }
+
+  buttonOpenElement.addEventListener('click', openPopupFormCard);
+  formElement.addEventListener('submit', submitPopupFormCard);
 }
 
-class PopUpFormProfile extends PopUpForm {
-  constructor(settings) {
-    super(settings);
-    this._elementProfileInput1 = document.querySelector(`.${settings.nameClassProfileInput1}`);
-    this._elementProfileInput2 = document.querySelector(`.${settings.nameClassProfileInput2}`);
-  }
+function setPopupProfile(settings) {
+  const popupElement = document.querySelector(`#${settings.nameIdPopUp}`);
+  const buttonOpenElement = document.querySelector(`.${settings.nameClassButtonOpenPopUp}`);
+  const formElement = popupElement.querySelector(`.${settings.nameClassPopUpForm}`);
 
-  _openPopupForm = () => {
-    this._elementPopUpProfileInput1.value = this._elementProfileInput1.textContent;
-    this._elementPopUpprofileInput2.value = this._elementProfileInput2.textContent;
-    super._openPopUpForm();
-  }
-
-  _submitPopupForm = (event) => {
+  function submitPopupFormProfile(event) {
+    const elementProfileInput1 = document.querySelector(`.${settings.nameClassProfileInput1}`);
+    const elementProfileInput2 = document.querySelector(`.${settings.nameClassProfileInput2}`);
     event.preventDefault();
-    this._elementProfileInput1.textContent = event.target[this._nameIdPopUpFormInput1].value;
-    this._elementProfileInput2.textContent = event.target[this._nameIdPopUpFormInput2].value;
-    super._submitPopupForm();
+    elementProfileInput1.textContent = event.target[settings.nameIdPopUpFormInput1].value;
+    elementProfileInput2.textContent = event.target[settings.nameIdPopUpFormInput2].value;
+    submitPopupForm(settings);
   }
 
-  setPopUp() {
-    this._buttonOpenElement.addEventListener('click', this._openPopupForm);
-    this._formElement.addEventListener('submit', this._submitPopupForm);
+  function openPopupFormProfile() {
+    const elementPopUpProfileInput1 = document.querySelector(`#${settings.nameIdPopUpFormInput1}`);
+    const elementPopUpprofileInput2 = document.querySelector(`#${settings.nameIdPopUpFormInput2}`);
+    const elementProfileInput1 = document.querySelector(`.${settings.nameClassProfileInput1}`);
+    const elementProfileInput2 = document.querySelector(`.${settings.nameClassProfileInput2}`);
+    elementPopUpProfileInput1.value = elementProfileInput1.textContent;
+    elementPopUpprofileInput2.value = elementProfileInput2.textContent;
+    popUpProfileValidator.startHideInputError(elementPopUpProfileInput1);
+    popUpProfileValidator.startHideInputError(elementPopUpprofileInput2);
+    openPopup(popupElement);
   }
+
+  buttonOpenElement.addEventListener('click', openPopupFormProfile);
+  formElement.addEventListener('submit', submitPopupFormProfile);
 }
 
+setPopupCard(settingsPopUpCard);
+setPopupProfile(settingsPopUpProfile);
 
-const popUpProfile = new PopUpFormProfile(settingsPopUpProfile);
-popUpProfile.setPopUp();
-
-const popUpCard = new PopUpFormCard(settingsPopUpCard);
-popUpCard.setPopUp();
+const popUpCardFormElement = document.querySelector(`#${settingsPopUpCard.nameIdPopUp}`);
+const popUpProfileFormElement = document.querySelector(`#${settingsPopUpProfile.nameIdPopUp}`);
+const popUpCardValidator = new FormValidator(settingsValidate, popUpCardFormElement);
+const popUpProfileValidator = new FormValidator(settingsValidate, popUpProfileFormElement);
+popUpCardValidator.enableValidation();
+popUpProfileValidator.enableValidation();
 
 function renderCard(item) {
   const card = new Card(item, settingsCard);

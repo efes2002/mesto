@@ -1,7 +1,7 @@
-export class Validator {
-  constructor(arg, formElement) {
+export class FormValidator {
+  constructor(arg, element) {
     this._arg = arg;
-    this._formElement = formElement;
+    this._formElement = element.querySelector(arg.formSelector);
     this._inputList = Array.from(this._formElement.querySelectorAll(this._arg.inputSelector));
     this._buttonElement = this._formElement.querySelector(this._arg.submitButtonSelector);
   }
@@ -75,7 +75,7 @@ export class Validator {
   };
 
   enableValidation() {
-    this._formElement.addEventListener('submit', (e) => {e.preventDefault();});
+    this._formElement.addEventListener('submit', (event) => {event.preventDefault();});
     this._setEventListeners();
   };
 }
