@@ -1,7 +1,5 @@
-import {openPopupCardView} from "./index.js";
-
 export class Card {
-  constructor(data, settingsCard){
+  constructor(data, settingsCard, openPopupCardView){
     this._cardElement = document
       .querySelector(`#${settingsCard.nameIdTemplateCard}`)
       .content.querySelector(`.${settingsCard.nameClassCardElement}`)
@@ -10,13 +8,12 @@ export class Card {
     this._elementCardText = this._cardElement.querySelector(`.${settingsCard.nameClassCardTitle}`);
     this._elementCardButtonDelete = this._cardElement.querySelector(`.${settingsCard.nameClassCardButtonDelete}`);
     this._elementCardButtonLike = this._cardElement.querySelector(`.${settingsCard.nameClassCardButtonLike}`);
-    this._nameClassCardImg = settingsCard.nameClassCardImg;
-    this._nameClassCardTitle = settingsCard.nameClassCardTitle;
     this._nameClassCardButtonLikeAction= settingsCard.nameClassCardButtonLikeAction;
     this._name = data.name;
     this._link = data.link;
     this._alt = `Фотография ${data.name}`;
     this.nameClassInsertForCard = settingsCard.nameClassInsertForCard;
+    this._openPopupCardView = openPopupCardView;
   }
 
   _fillCardElement() {
@@ -26,7 +23,7 @@ export class Card {
   }
 
   _openPopup() {
-    openPopupCardView(this._cardElement, this._nameClassCardImg, this._nameClassCardTitle);
+    this._openPopupCardView();
   }
 
   _deleteElement() {
