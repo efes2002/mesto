@@ -4,6 +4,27 @@ import {initialCards, settingsCard,
   settingsPopUpCardView,settingsValidate} from './constants.js';
 import {FormValidator} from "./FormValidator.js";
 
+const profileNameElement = document.querySelector(`.${settingsPopUpProfile.nameClassProfileName}`);
+const profileJobElement = document.querySelector(`.${settingsPopUpProfile.nameClassProfileJob}`);
+
+const popupCardViewElement = document.querySelector(`#${settingsPopUpCardView.nameIdPopUp}`);
+const popupCardViewImgElement = popupCardViewElement.querySelector(`.${settingsPopUpCardView.nameClassPopUpImg}`);
+const popupCardViewTitleElement = popupCardViewElement.querySelector(`.${settingsPopUpCardView.nameClassPopUpTitle}`);
+
+const popupCardElement = document.querySelector(`#${settingsPopUpCard.nameIdPopUp}`);
+const popupCardFormElement = popupCardElement.querySelector(`.${settingsPopUpCard.nameClassPopUpForm}`);
+const popupCardNameElement = popupCardFormElement.querySelector(`#${settingsPopUpCard.nameIdPopUpFormName}`);
+const popupCardLinkElement = popupCardFormElement.querySelector(`#${settingsPopUpCard.nameIdPopUpFormLink}`);
+const popupCardButtonElement = popupCardElement.querySelector(`.${settingsPopUpCard.nameClassPopUpFormButton}`);
+const buttonOpenPopupCardElement = document.querySelector(`.${settingsPopUpCard.nameClassButtonOpenPopUp}`);
+
+const popupProfileElement = document.querySelector(`#${settingsPopUpProfile.nameIdPopUp}`);
+const popupProfileFormElement = popupProfileElement.querySelector(`.${settingsPopUpProfile.nameClassPopUpForm}`);
+const popupProfileNameElement = popupProfileFormElement.querySelector(`#${settingsPopUpProfile.nameIdPopUpFormName}`);
+const popupProfileJobElement = popupProfileFormElement.querySelector(`#${settingsPopUpProfile.nameIdPopUpFormJob}`);
+const popupProfileButtonElement = popupProfileElement.querySelector(`.${settingsPopUpProfile.nameClassPopUpFormButton}`);
+const buttonOpenPopupProfileElement = document.querySelector(`.${settingsPopUpProfile.nameClassButtonOpenPopUp}`);
+
 function openPopup(popupElement) {
   const buttonXElement = popupElement.querySelector('.popup__button-x');
   popupElement.addEventListener('click', listenerClickOverlayPopupElement);
@@ -13,10 +34,11 @@ function openPopup(popupElement) {
 }
 
 function closePopup(popupElement) {
+  const buttonXElement = popupElement.querySelector('.popup__button-x');
   popupElement.classList.toggle('popup_opened');
   document.removeEventListener('keydown', listenerKeydownPopupElement);
   popupElement.removeEventListener('click', listenerClickOverlayPopupElement);
-  popupElement.removeEventListener('click', listenerPushButtonXElement);
+  buttonXElement.removeEventListener('click', listenerPushButtonXElement);
 }
 
 function listenerClickOverlayPopupElement(event) {
@@ -39,17 +61,13 @@ function listenerPushButtonXElement() {
 }
 
 function openPopupCardView() {
-  const elementPopUpPopUpCardView = document.querySelector(`#${settingsPopUpCardView.nameIdPopUp}`);
-  const elementPopUpImg = elementPopUpPopUpCardView.querySelector(`.${settingsPopUpCardView.nameClassPopUpImg}`);
-  const elementPopUpTitle = elementPopUpPopUpCardView.querySelector(`.${settingsPopUpCardView.nameClassPopUpTitle}`);
   const name = this._elementCardText.textContent;
   const link = this._elementCardImg.src;
   const alt = this._elementCardImg.alt;
-
-  elementPopUpImg.src = link;
-  elementPopUpImg.alt = alt;
-  elementPopUpTitle.textContent = name;
-  openPopup(elementPopUpPopUpCardView);
+  popupCardViewImgElement.src = link;
+  popupCardViewImgElement.alt = alt;
+  popupCardViewTitleElement.textContent = name;
+  openPopup(popupCardViewElement);
 }
 
 function submitPopupForm(popupElement, formButtonElement, nameClassPopUpFormButtonDisabled) {
@@ -58,70 +76,43 @@ function submitPopupForm(popupElement, formButtonElement, nameClassPopUpFormButt
   formButtonElement.classList.toggle(settingsValidate.inactiveButtonClass);
 }
 
-/* Настройка PopupFormCard элемента */
-
-const popupCardElement = document.querySelector(`#${settingsPopUpCard.nameIdPopUp}`);
-const popupCardButtonElement = popupCardElement.querySelector(`.${settingsPopUpCard.nameClassPopUpFormButton}`);
-const buttonOpenPopupCardElement = document.querySelector(`.${settingsPopUpCard.nameClassButtonOpenPopUp}`);
-const popupCardFormElement = popupCardElement.querySelector(`.${settingsPopUpCard.nameClassPopUpForm}`);
-
 function submitPopupFormCard(event) {
-  const nameIdPopUpFormName = settingsPopUpCard.nameIdPopUpFormName;
-  const nameIdPopUpFormLink = settingsPopUpCard.nameIdPopUpFormLink;
   event.preventDefault();
   renderCard ({
-    name: event.target[nameIdPopUpFormName].value,
-    link: event.target[nameIdPopUpFormLink].value
+    name: event.target[settingsPopUpCard.nameIdPopUpFormName].value,
+    link: event.target[settingsPopUpCard.nameIdPopUpFormLink].value
   });
   submitPopupForm(popupCardElement, popupCardButtonElement, settingsPopUpCard.nameClassPopUpFormButtonDisabled);
 }
 
 function openPopupFormCard() {
-  const elementPopUpProfileName = document.querySelector(`#${settingsPopUpCard.nameIdPopUpFormName}`);
-  const elementPopUpprofileLink = document.querySelector(`#${settingsPopUpCard.nameIdPopUpFormLink}`);
-  elementPopUpProfileName.value = '';
-  elementPopUpprofileLink.value = '';
-  popUpCardValidator.startHideInputError(elementPopUpProfileName);
-  popUpCardValidator.startHideInputError(elementPopUpprofileLink);
+  popupCardNameElement.value = '';
+  popupCardLinkElement.value = '';
+  popUpCardValidator.startHideInputError(popupCardNameElement);
+  popUpCardValidator.startHideInputError(popupCardLinkElement);
   openPopup(popupCardElement);
 }
 
 buttonOpenPopupCardElement.addEventListener('click', openPopupFormCard);
 popupCardFormElement.addEventListener('submit', submitPopupFormCard);
 
-/* Настройка PopupFormProfile элемента */
-
-const popupProfileElement = document.querySelector(`#${settingsPopUpProfile.nameIdPopUp}`);
-const popupProfileButtonElement = popupProfileElement.querySelector(`.${settingsPopUpProfile.nameClassPopUpFormButton}`);
-const buttonOpenPopupProfileElement = document.querySelector(`.${settingsPopUpProfile.nameClassButtonOpenPopUp}`);
-const popupProfileFormElement = popupProfileElement.querySelector(`.${settingsPopUpProfile.nameClassPopUpForm}`);
-
 function submitPopupFormProfile(event) {
-  const elementProfileName = document.querySelector(`.${settingsPopUpProfile.nameClassProfileName}`);
-  const elementProfileJob = document.querySelector(`.${settingsPopUpProfile.nameClassProfileJob}`);
   event.preventDefault();
-  elementProfileName.textContent = event.target[settingsPopUpProfile.nameIdPopUpFormName].value;
-  elementProfileJob.textContent = event.target[settingsPopUpProfile.nameIdPopUpFormJob].value;
+  profileNameElement.textContent = event.target[settingsPopUpProfile.nameIdPopUpFormName].value;
+  profileJobElement.textContent = event.target[settingsPopUpProfile.nameIdPopUpFormJob].value;
   submitPopupForm(popupProfileElement, popupProfileButtonElement, settingsPopUpProfile.nameClassPopUpFormButtonDisabled);
 }
 
 function openPopupFormProfile() {
-  const elementPopUpProfileName = document.querySelector(`#${settingsPopUpProfile.nameIdPopUpFormName}`);
-  const elementPopUpprofileJob = document.querySelector(`#${settingsPopUpProfile.nameIdPopUpFormJob}`);
-  const elementProfileName = document.querySelector(`.${settingsPopUpProfile.nameClassProfileName}`);
-  const elementProfileJob = document.querySelector(`.${settingsPopUpProfile.nameClassProfileJob}`);
-  elementPopUpProfileName.value = elementProfileName.textContent;
-  elementPopUpprofileJob.value = elementProfileJob.textContent;
-  popUpProfileValidator.startHideInputError(elementPopUpProfileName);
-  popUpProfileValidator.startHideInputError(elementPopUpprofileJob);
-  //popupProfileFormElement.toggleAttribute(`${settingsPopUpProfile.nameClassPopUpFormButtonDisabled}`);
+  popupProfileNameElement.value = profileNameElement.textContent;
+  popupProfileJobElement.value = profileJobElement.textContent;
+  popUpProfileValidator.startHideInputError(popupProfileNameElement);
+  popUpProfileValidator.startHideInputError(popupProfileJobElement);
   openPopup(popupProfileElement);
 }
 
 buttonOpenPopupProfileElement.addEventListener('click', openPopupFormProfile);
 popupProfileFormElement.addEventListener('submit', submitPopupFormProfile);
-
-/* Настройка Валидации PopupForm */
 
 const popUpCardValidator = new FormValidator(settingsValidate, popupCardElement);
 const popUpProfileValidator = new FormValidator(settingsValidate, popupProfileElement);
