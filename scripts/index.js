@@ -132,3 +132,132 @@ function startInitialCards() {
 }
 
 startInitialCards();
+
+class Section {
+  constructor({items, renderer}, containerSelector){
+    this._initialArray = items;
+    this._renderer = renderer;
+    this._container = document.querySelector(containerSelector);
+  }
+
+  renderItems() {
+    this._initialArray.forEach(item => {
+      this._renderer(item);
+    });
+  }
+
+  addItem(element) {
+    this._container.append(element);
+  }
+}
+
+class Popup {
+  constructor(popupSelector){
+    this._popupElement = document.querySelector(popupSelector);
+    this._buttonXElement = this._popupElement.querySelector('.popup__button-x');
+  }
+
+  open() {
+    this.setEventListeners();
+    this._popupElement.classList.toggle('popup_opened');
+  }
+
+  close() {
+    this._popupElement.classList.toggle('popup_opened');
+    this._removeEventListeners();
+  }
+
+  setEventListeners() {
+    this._popupElement.addEventListener('click', this._handleOverlayClose);
+    this._buttonXElement.addEventListener('click', this.close);
+    document.addEventListener('keydown', this._handleEscClose);
+  }
+
+  _removeEventListeners() {
+    document.removeEventListener('keydown', this._handleEscClose);
+    this._popupElement.removeEventListener('click', this._handleOverlayClose);
+    this._buttonXElement.removeEventListener('click', this.close);
+  }
+
+  _handleEscClose(event) {
+    if (event.key === "Escape") {
+      this.close();
+    }
+  }
+
+  _handleOverlayClose(event) {
+    if ((this._popupElement) && (this._popupElement === event.target)) {
+      this.close();
+    }
+  }
+}
+
+class PopupWithImage extends Popup{
+  constructor(popupSelector) {
+    super(popupSelector);
+  }
+
+  open() {
+    const name = this._elementCardText.textContent;
+    const link = this._elementCardImg.src;
+    const alt = this._elementCardImg.alt;
+    popupCardViewImgElement.src = link;
+    popupCardViewImgElement.alt = alt;
+    popupCardViewTitleElement.textContent = name;
+    super.open();
+  }
+}
+
+class PopupWithForm extends Popup{
+  constructor(popupSelector, function1) {
+    super(popupSelector);
+    this._function1 = function1;
+    this._popupButtonElement = this._popupElement.querySelector('form__button');
+  }
+
+  _getInputValues() {/*Содержит приватный метод _getInputValues, который собирает данные всех полей формы.*/
+    this._inputList = this._popupElement.querySelectorAll('.form__input');
+    this._formValues = {};
+    this._inputList.forEach(input => {
+      this._formValues[input.id] = input.value;
+    });
+    return this._formValues;
+  }
+
+  setEventListeners() { /*добавлять обработчик сабмита формы*/
+    this._popupElement.addEventListener('submit', this._submitPopupForm);
+    super.setEventListeners();
+  }
+
+  _submitPopupForm(event) {
+    event.preventDefault();
+    this._function1(this._getInputValues());
+    /*
+    (data) => {
+      renderCard ({
+        name: data[cardName],
+        link: data[cardLink]
+      });
+    }
+
+    */
+    /*
+     (data) => {
+        const profileNameElement = document.querySelector(`.${settingsPopUpProfile.nameClassProfileName}`);
+        const profileJobElement = document.querySelector(`.${settingsPopUpProfile.nameClassProfileJob}`);
+        profileNameElement.textContent = data[profileName];
+        profileJobElement.textContent = data[profileJob];
+     }
+
+    */
+    this.close();
+  }
+
+  close() {/*при закрытии попапа форма должна ещё и сбрасываться*/
+    this._popupButtonElement.toggleAttribute('disabled');
+    this._popupButtonElement.classList.toggle(settingsValidate.inactiveButtonClass);
+    super.close();
+
+  }
+
+}
