@@ -123,11 +123,6 @@ class Section {
     this._initialArray = items;
     this._renderer = renderer;
     this._container = document.querySelector(containerSelector);
-    this.ts = this._test2(items);
-  }
-  _test2(items) {
-      console.log(4, items);
-    console.log(this._renderer);
   }
 
   renderItems() {
@@ -146,9 +141,13 @@ class Popup {
   constructor(popupSelector){
     this._popupElement = document.querySelector(popupSelector);
     this._buttonXElement = this._popupElement.querySelector('.popup__button-x');
+    this._handleClickXBind = this._handleClickX.bind(this);
+    this._handleOverlayCloseBind = this._handleOverlayClose.bind(this);
+    this._handleEscCloseBind = this._handleEscClose.bind(this);
   }
 
   open() {
+    console.log(8, this);
     this.setEventListeners();
     this._popupElement.classList.toggle('popup_opened');
   }
@@ -159,31 +158,37 @@ class Popup {
   }
 
   setEventListeners() {
-    this._popupElement.addEventListener('click', this._handleOverlayClose);
-    this._buttonXElement.addEventListener('click', this.close);
-    document.addEventListener('keydown', this._handleEscClose);
+    console.log(9, this);
+    this._buttonXElement.addEventListener('click', this._handleClickXBind);
+    this._popupElement.addEventListener('click', this._handleOverlayCloseBind);
+    document.addEventListener('keydown', this._handleEscCloseBind);
+    console.log(10, this._buttonXElement);
   }
 
   _removeEventListeners() {
-    document.removeEventListener('keydown', this._handleEscClose);
-    this._popupElement.removeEventListener('click', this._handleOverlayClose);
-    this._buttonXElement.removeEventListener('click', this.close);
+    this._buttonXElement.removeEventListener('click', this._handleClickXBind);
+    this._popupElement.removeEventListener('click', this._handleOverlayCloseBind);
+    document.removeEventListener('keydown', this._handleEscCloseBind);
+
+  }
+  _handleClickX() {
+    this.close();
   }
 
   _handleEscClose(event) {
     if (event.key === "Escape") {
-      this.close();
+      this._handleClickX();
     }
   }
 
   _handleOverlayClose(event) {
     if ((this._popupElement) && (this._popupElement === event.target)) {
-      this.close();
+      this._handleClickX();
     }
   }
 }
 
-class PopupWithImage extends Popup{
+class PopupWithImage extends Popup {
   constructor(popupSelector) {
     super(popupSelector);
   }
@@ -195,16 +200,16 @@ class PopupWithImage extends Popup{
     popupCardViewImgElement.src = link;
     popupCardViewImgElement.alt = alt;
     popupCardViewTitleElement.textContent = name;
-    super.open();
+    super.open.bind(popupWithImage)();
   }
 }
 
-class PopupWithForm extends Popup{
+class PopupWithForm extends Popup {
   constructor(popupSelector, callbackSubmit, callbackOpen) {
     super(popupSelector);
     this._callbackSubmit = callbackSubmit;
     this._callbackOpen = callbackOpen;
-    this._popupButtonElement = this._popupElement.querySelector('form__button');
+    this._popupButtonElement = this._popupElement.querySelector('.form__button');
   }
 
   _getInputValues() {/*Содержит приватный метод _getInputValues, который собирает данные всех полей формы.*/
@@ -270,10 +275,7 @@ const popupWithImage = new PopupWithImage('#popup-card-view');
 
 const popupFormAddCard = new PopupWithForm('#popup-add-card',
     (data) => {
-      const items = [{
-        name: data[cardName],
-        link: data[cardLink]
-      }];
+      const items = [{name: data[cardName], link: data[cardLink] }];
       const section = new Section({items, renderCard},'.places__elements');
       section.renderItems();
     },
@@ -287,23 +289,25 @@ const popupFormAddCard = new PopupWithForm('#popup-add-card',
     }
   );
 
+const callbackOpenEditProfile = function() {
+  const {name, job} = userInfo.getUserInfo();
+  const popupProfileNameElement = this._popupElement.querySelector(`#profileName`);
+  const popupProfileJobElement = this._popupElement.querySelector(`#profileJob`);
+  popupProfileNameElement.value = name;
+  popupProfileJobElement.value = job;
+  popUpProfileValidator.startHideInputError(popupProfileNameElement);
+  popUpProfileValidator.startHideInputError(popupProfileJobElement);
+}
+
 const popupFormEditProfile = new PopupWithForm(
     '#popup-edit-profile',
     (data) => {userInfo.setUserInfo({name: data.profileName, job: data.profileJob})},
-    () => {
-          const {name, job} = userInfo.getUserInfo();
-          const popupProfileNameElement = this._popupElement.querySelector(`#profileName`);
-          const popupProfileJobElement = this._popupElement.querySelector(`#profileJob`);
-          popupProfileNameElement.value = name;
-          popupProfileJobElement.value = job;
-          popUpProfileValidator.startHideInputError(popupProfileNameElement);
-          popUpProfileValidator.startHideInputError(popupProfileJobElement);
-    }
+    callbackOpenEditProfile
 );
 
-buttonOpenPopupCardElement.addEventListener('click', popupFormAddCard.open);
+buttonOpenPopupCardElement.addEventListener('click', popupFormAddCard.open.bind(popupFormAddCard));
 
-buttonOpenPopupProfileElement.addEventListener('click', popupFormEditProfile.open);
+buttonOpenPopupProfileElement.addEventListener('click', popupFormEditProfile.open.bind(popupFormEditProfile));
 
 
 function renderCard(item) {
