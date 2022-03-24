@@ -223,16 +223,16 @@ class PopupWithForm extends Popup {
     super.setEventListeners();
   }
 
-  _submitPopupForm(event) {
+  _submitPopupForm(event) { /* fdfdfdfdfdf*/
     event.preventDefault();
-    const d = this._getInputValues();
-    console.log(1, d);
+    console.log(this._getInputValues)
     this._callbackSubmit(this._getInputValues());
     this.close();
   }
 
   open() {
     this._callbackOpen();
+    this.setEventListeners();
     super.open();
   }
 
@@ -301,7 +301,7 @@ const callbackOpenEditProfile = function() {
 const callbackSubmitEditProfile = function(data) {
   userInfo.setUserInfo({name: data.profileName, job: data.profileJob})
 }
-const popupFormEditProfile = new PopupWithForm('#popup-edit-profile',callbackSubmitEditProfile,callbackOpenEditProfile);
+const popupFormEditProfile = new PopupWithForm('#popup-edit-profile', callbackSubmitEditProfile, callbackOpenEditProfile);
 
 
 buttonOpenPopupCardElement.addEventListener('click', popupFormAddCard.open.bind(popupFormAddCard));
