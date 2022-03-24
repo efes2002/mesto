@@ -147,7 +147,6 @@ class Popup {
   }
 
   open() {
-    console.log(8, this);
     this.setEventListeners();
     this._popupElement.classList.toggle('popup_opened');
   }
@@ -158,11 +157,9 @@ class Popup {
   }
 
   setEventListeners() {
-    console.log(9, this);
     this._buttonXElement.addEventListener('click', this._handleClickXBind);
     this._popupElement.addEventListener('click', this._handleOverlayCloseBind);
     document.addEventListener('keydown', this._handleEscCloseBind);
-    console.log(10, this._buttonXElement);
   }
 
   _removeEventListeners() {
@@ -228,6 +225,8 @@ class PopupWithForm extends Popup {
 
   _submitPopupForm(event) {
     event.preventDefault();
+    const d = this._getInputValues();
+    console.log(1, d);
     this._callbackSubmit(this._getInputValues());
     this.close();
   }
@@ -273,21 +272,22 @@ const userInfo = new UserInfo({nameSelector: '.profile__name', jobSelector : '.p
 
 const popupWithImage = new PopupWithImage('#popup-card-view');
 
-const popupFormAddCard = new PopupWithForm('#popup-add-card',
-    (data) => {
-      const items = [{name: data[cardName], link: data[cardLink] }];
-      const section = new Section({items, renderCard},'.places__elements');
-      section.renderItems();
-    },
-    () => {
-      const popupCardNameElement = this._popupElement.querySelector('#cardName');
-      const popupCardLinkElement = this._popupElement.querySelector('#cardLink');
-      popupCardNameElement.value = '';
-      popupCardLinkElement.value = '';
-      popUpCardValidator.startHideInputError(popupCardNameElement);
-      popUpCardValidator.startHideInputError(popupCardLinkElement);
-    }
-  );
+
+const callbackOpenAddCard = function() {
+  const popupCardNameElement = this._popupElement.querySelector('#cardName');
+  const popupCardLinkElement = this._popupElement.querySelector('#cardLink');
+  popupCardNameElement.value = '';
+  popupCardLinkElement.value = '';
+  popUpCardValidator.startHideInputError(popupCardNameElement);
+  popUpCardValidator.startHideInputError(popupCardLinkElement);
+}
+const callbackSubmitAddCard = function(data) {
+  const items = [{name: data[cardName], link: data[cardLink] }];
+  const section = new Section({items, renderCard},'.places__elements');
+  section.renderItems();
+}
+const popupFormAddCard = new PopupWithForm('#popup-add-card', callbackSubmitAddCard, callbackOpenAddCard);
+
 
 const callbackOpenEditProfile = function() {
   const {name, job} = userInfo.getUserInfo();
@@ -298,15 +298,13 @@ const callbackOpenEditProfile = function() {
   popUpProfileValidator.startHideInputError(popupProfileNameElement);
   popUpProfileValidator.startHideInputError(popupProfileJobElement);
 }
+const callbackSubmitEditProfile = function(data) {
+  userInfo.setUserInfo({name: data.profileName, job: data.profileJob})
+}
+const popupFormEditProfile = new PopupWithForm('#popup-edit-profile',callbackSubmitEditProfile,callbackOpenEditProfile);
 
-const popupFormEditProfile = new PopupWithForm(
-    '#popup-edit-profile',
-    (data) => {userInfo.setUserInfo({name: data.profileName, job: data.profileJob})},
-    callbackOpenEditProfile
-);
 
 buttonOpenPopupCardElement.addEventListener('click', popupFormAddCard.open.bind(popupFormAddCard));
-
 buttonOpenPopupProfileElement.addEventListener('click', popupFormEditProfile.open.bind(popupFormEditProfile));
 
 
