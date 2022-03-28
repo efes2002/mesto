@@ -3,8 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="pages/index.css">
-  <script type="module" src="./scripts/index.js"></script>
   <title>Mesto Russia</title>
 </head>
   <body class="root">
@@ -14,7 +12,7 @@
       </header>
       <main class="content">
         <section class="profile">
-          <img class="profile__avatar" src="images/foto-fedar-konuxov.jpg" alt="Фотография аватара путешественника">
+          <img class="profile__avatar" src="<%=require('./images/foto-fedar-konuxov.jpg')%>" alt="Фотография аватара путешественника">
           <div class="profile__info">
             <div class="profile__title-box">
               <h1 class="profile__name">Федор Конюхов</h1>
@@ -35,7 +33,7 @@
     </div>
     <template id="template-card">
       <li class="element">
-        <img class="element__img" src="images/foto-demo.jpg"
+        <img class="element__img" src=""
              alt="Фотография">
         <div class="element__info">
           <h2 class="element__title"></h2>
@@ -99,7 +97,7 @@
     <div class="popup" id="popup-card-view">
       <div class="popup__container">
         <div class="element-view">
-          <img class="element-view__img" src="images/foto-demo.jpg"
+          <img class="element-view__img" src=""
                alt="Фотография">
           <h2 class="element-view__title">Фотография</h2>
         </div>

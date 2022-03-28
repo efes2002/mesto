@@ -42,6 +42,13 @@ export const settingsCard = {
   nameClassCardButtonLikeAction: 'element__like_action',
   nameClassInsertForCard: 'places__elements'
 };
+export const settingsPopup = {
+  nameClassPopupOpen: 'popup_opened',
+  nameClassPopupButtonX: 'popup__button-x',
+  nameClassPopupForm: 'form',
+  nameClassPopupFormButton: 'form__button',
+  nameClassPopupFormButtonDisabled: 'disabled'
+};
 export const settingsPopUpProfile = {
   nameIdPopUp: 'popup-edit-profile',
   nameClassPopUpOpen: 'popup_opened',
