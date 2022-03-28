@@ -126,7 +126,6 @@ class Section {
   }
 
   renderItems() {
-
     this._initialArray.forEach(item => {
       this.addItem(this._renderer(item))
     });
@@ -144,7 +143,7 @@ class Popup {
     this._handleClickXBind = this._handleClickX.bind(this);
     this._handleOverlayCloseBind = this._handleOverlayClose.bind(this);
     this._handleEscCloseBind = this._handleEscClose.bind(this);
-    this._testq = (()=>{console.log(111, this);})();
+    //this._testq = (()=>{console.log(111, this);})();
   }
 
   open() {
@@ -208,13 +207,10 @@ class PopupWithForm extends Popup {
     this._callbackSubmit = callbackSubmit;
     this._callbackOpen = callbackOpen;
     this._popupButtonElement = this._popupElement.querySelector('.form__button');
-    this._test = (()=>{console.log(11, this);})();
-    this._test3 = popupSelector;
+    this._submitPopupFormBind = this._submitPopupForm.bind(this);
   }
 
   _getInputValues() {/*Содержит приватный метод _getInputValues, который собирает данные всех полей формы.*/
-    console.log(17, this);
-
     this._inputList = this._popupElement.querySelectorAll('.form__input');
     this._formValues = {};
     this._inputList.forEach(input => {
@@ -224,33 +220,26 @@ class PopupWithForm extends Popup {
   }
 
   setEventListeners() { /*добавлять обработчик сабмита формы*/
-    console.log(12, this._test3, this._popupElement);
-    this._popupElement.addEventListener('submit', this._submitPopupForm);
+    this._popupElement.addEventListener('submit', this._submitPopupFormBind);
     super.setEventListeners();
-    console.log(13);
   }
 
-  _submitPopupForm(event) { /* fdfdfdfdfdf*/
+  _submitPopupForm(event) {
     event.preventDefault();
-    console.log(14, this);
     this._callbackSubmit(this._getInputValues());
     this.close();
   }
 
   open() {
-    console.log("k1", this);
     this._callbackOpen();
-    this.setEventListeners.bind(this)();
-    super.open();
-    console.log("k2");
+    super.open.bind(this)();
   }
 
   close() {/*при закрытии попапа форма должна ещё и сбрасываться*/
-    console.log("k3");
-    this._popupButtonElement.toggleAttribute('disabled');
-    this._popupButtonElement.classList.toggle(settingsValidate.inactiveButtonClass);
+    this._popupElement.removeEventListener('submit', this._submitPopupFormBind);
+    this._popupButtonElement.classList.add('form__button_disabled');
+    if (!this._popupButtonElement.hasAttribute('disabled')) {this._popupButtonElement.setAttribute('disabled', '')}
     super.close();
-    console.log("k4");
   }
 
 }
@@ -273,7 +262,6 @@ class UserInfo{
   }
 }
 
-
 const popUpCardValidator = new FormValidator(settingsValidate, popupCardElement);
 const popUpProfileValidator = new FormValidator(settingsValidate, popupProfileElement);
 popUpCardValidator.enableValidation();
@@ -293,15 +281,14 @@ const callbackOpenAddCard = function() {
   popUpCardValidator.startHideInputError(popupCardLinkElement);
 }
 const callbackSubmitAddCard = function(data) {
-  const items = [{name: data[cardName], link: data[cardLink] }];
-  const section = new Section({items, renderCard},'.places__elements');
+  const items = [{name: data.cardName, link: data.cardLink }];
+  const section = new Section({items: items, renderer: renderCard},'.places__elements');
   section.renderItems();
 }
 const popupFormAddCard = new PopupWithForm('#popup-add-card', callbackSubmitAddCard, callbackOpenAddCard);
 
 
 const callbackOpenEditProfile = function() {
-  console.log(3, this)
   const {name, job} = userInfo.getUserInfo();
   const popupProfileNameElement = this._popupElement.querySelector(`#profileName`);
   const popupProfileJobElement = this._popupElement.querySelector(`#profileJob`);
@@ -311,7 +298,6 @@ const callbackOpenEditProfile = function() {
   popUpProfileValidator.startHideInputError(popupProfileJobElement);
 }
 const callbackSubmitEditProfile = function(data) {
-  console.log(2, this)
   userInfo.setUserInfo({name: data.profileName, job: data.profileJob})
 }
 const popupFormEditProfile = new PopupWithForm('#popup-edit-profile', callbackSubmitEditProfile, callbackOpenEditProfile);
