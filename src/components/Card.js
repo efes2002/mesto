@@ -23,7 +23,7 @@ export class Card {
   }
 
   _openPopup() {
-    this._openPopupCardView();
+    this._openPopupCardView(this._name, this._link, this._alt);
   }
 
   _deleteElement() {

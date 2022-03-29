@@ -47,7 +47,8 @@ export const settingsPopup = {
   nameClassPopupButtonX: 'popup__button-x',
   nameClassPopupForm: 'form',
   nameClassPopupFormButton: 'form__button',
-  nameClassPopupFormButtonDisabled: 'disabled'
+  nameClassPopupFormButtonDisabled: 'disabled',
+  inactiveButtonClass: 'form__button_disabled',
 };
 export const settingsPopUpProfile = {
   nameIdPopUp: 'popup-edit-profile',

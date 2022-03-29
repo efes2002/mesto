@@ -1,13 +1,13 @@
-import {settingsPopup, settingsValidate} from "./constants.js";
+import {settingsPopup, settingsValidate} from "../scripts/constants.js";
 import { Popup } from './Popup.js';
 
 export class PopupWithForm extends Popup {
-  constructor(popupSelector, callbackSubmit, callbackOpen) {
+  constructor(popupSelector, callbackSubmit, callbackOpen, callStartHideInputError) {
     super(popupSelector);
     this._callbackSubmit = callbackSubmit;
     this._callbackOpen = callbackOpen;
+    this._callStartHideInputError = callStartHideInputError;
     this._popupButtonElement = this._popupElement.querySelector(`.${settingsPopup.nameClassPopupFormButton}`);
-    this._submitPopupFormBind = this._submitPopupForm.bind(this);
   }
 
   _getInputValues() {
@@ -20,7 +20,7 @@ export class PopupWithForm extends Popup {
   }
 
   setEventListeners() {
-    this._popupElement.addEventListener('submit', this._submitPopupFormBind);
+    this._popupElement.addEventListener('submit', this._submitPopupForm.bind(this));
     super.setEventListeners();
   }
 
@@ -32,12 +32,15 @@ export class PopupWithForm extends Popup {
 
   open() {
     this._callbackOpen();
-    super.open.bind(this)();
+    this._inputList = this._popupElement.querySelectorAll(settingsValidate.inputSelector);
+    this._inputList.forEach(input => {
+      this._callStartHideInputError(input);
+    });
+    super.open();
   }
 
   close() {
-    this._popupElement.removeEventListener('submit', this._submitPopupFormBind);
-    this._popupButtonElement.classList.add(settingsValidate.inactiveButtonClass);
+    this._popupButtonElement.classList.add(settingsPopup.inactiveButtonClass);
     if (!this._popupButtonElement.hasAttribute('disabled')) {this._popupButtonElement.setAttribute('disabled', '')}
     super.close();
   }
