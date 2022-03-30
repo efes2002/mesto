@@ -49,7 +49,9 @@ export const settingsPopup = {
   nameClassPopupFormButton: 'form__button',
   nameClassPopupFormButtonDisabled: 'disabled',
   inactiveButtonClass: 'form__button_disabled',
+  inputSelector: '.form__input'
 };
+
 export const settingsPopUpProfile = {
   nameIdPopUp: 'popup-edit-profile',
   nameClassPopUpOpen: 'popup_opened',
@@ -62,6 +64,7 @@ export const settingsPopUpProfile = {
   nameClassProfileName: 'profile__name',
   nameClassProfileJob: 'profile__job',
   nameClassButtonOpenPopUp:'profile__edit-button',
+  inputSelector: '.form__input',
 };
 export const settingsPopUpCard = {
   nameIdPopUp: 'popup-add-card',
@@ -73,6 +76,7 @@ export const settingsPopUpCard = {
   nameIdPopUpFormName: 'cardName',
   nameIdPopUpFormLink: 'cardLink',
   nameClassButtonOpenPopUp:'profile__add-button',
+  inputSelector: '.form__input',
 };
 export const settingsPopUpCardView = {
   nameIdPopUp: 'popup-card-view',

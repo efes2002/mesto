@@ -28,19 +28,11 @@ const section = new Section({items: initialCards, renderer: renderCard},'.places
 export const popupWithImage = new PopupWithImage(`#${settingsPopUpCardView.nameIdPopUp}`);
 popupWithImage.setEventListeners();
 
-const callbackOpenAddCard = function() {
-  this._popupElement.querySelector('form').reset();
-}
 const callbackSubmitAddCard = function(data) {
   const cardElement = renderCard({name: data.cardName, link: data.cardLink })
   section.addItem(cardElement);
 }
-const popupFormAddCard = new PopupWithForm(
-  `#${settingsPopUpCard.nameIdPopUp}`,
-  callbackSubmitAddCard,
-  callbackOpenAddCard,
-  popUpCardValidator.startHideInputError.bind(popUpCardValidator)
-);
+const popupFormAddCard = new PopupWithForm( `#${settingsPopUpCard.nameIdPopUp}`,callbackSubmitAddCard);
 popupFormAddCard.setEventListeners();
 
 const callbackOpenEditProfile = function() {
@@ -57,24 +49,24 @@ const callbackSubmitEditProfile = function(data) {
 const popupFormEditProfile = new PopupWithForm(
   `#${settingsPopUpProfile.nameIdPopUp}`,
   callbackSubmitEditProfile,
-  callbackOpenEditProfile,
-  popUpCardValidator.startHideInputError.bind(popUpCardValidator)
-);
+  callbackOpenEditProfile);
 popupFormEditProfile.setEventListeners();
 
 const buttonOpenPopupCardElement = document.querySelector(`.${settingsPopUpCard.nameClassButtonOpenPopUp}`);
 const buttonOpenPopupProfileElement = document.querySelector(`.${settingsPopUpProfile.nameClassButtonOpenPopUp}`);
 
-buttonOpenPopupCardElement.addEventListener('click', popupFormAddCard.open.bind(popupFormAddCard));
-buttonOpenPopupProfileElement.addEventListener('click', popupFormEditProfile.open.bind(popupFormEditProfile));
-/*Замечание - popupFormAddCard.open.bind(popupFormAddCard) При вызове метода у экземпляра класса, сам этот экземпляр класса и будет контекстом. Его не надо еще перепривязывать.*/
-/*Ответ - Если я не привязываю то контекс теряеться*/
-
-
+buttonOpenPopupCardElement.addEventListener('click', ()=>{
+  popUpCardValidator.startHideInputError();
+  popupFormAddCard.open();
+});
+buttonOpenPopupProfileElement.addEventListener('click', ()=>{
+  popUpProfileValidator.startHideInputError();
+  popupFormEditProfile.open();
+});
 
 function renderCard(item) {
-  const card = new Card(item, settingsCard, popupWithImage.open.bind(popupWithImage));
-  return card.setCardElement();
+  const card = new Card(item, settingsCard, (name, link, alt)=>{popupWithImage.open(name, link, alt)});
+  return section.addItem(card.setCardElement());
 }
 
 section.renderItems();

@@ -6,8 +6,11 @@ export class FormValidator {
     this._buttonElement = this._formElement.querySelector(this._arg.submitButtonSelector);
   }
 
-  startHideInputError(inputElement) {
-    this._hideInputError(inputElement);
+  startHideInputError() {
+    this._inputList.forEach((input)=>{
+      this._hideInputError(input);
+    });
+    this._toggleButtonState();
   }
 
   _showInputError(inputElement) {
