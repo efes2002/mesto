@@ -23,7 +23,15 @@ const userInfo = new UserInfo({
   jobSelector : `.${settingsPopUpProfile.nameClassProfileJob}`
 });
 
-const section = new Section({items: initialCards, renderer: renderCard},'.places__elements');
+const section = new Section(
+  {
+    items: initialCards,
+    renderer: (item) => {
+      section.addItem(renderCard(item));
+    }
+  },
+  '.places__elements'
+);
 
 export const popupWithImage = new PopupWithImage(`#${settingsPopUpCardView.nameIdPopUp}`);
 popupWithImage.setEventListeners();
@@ -66,7 +74,7 @@ buttonOpenPopupProfileElement.addEventListener('click', ()=>{
 
 function renderCard(item) {
   const card = new Card(item, settingsCard, (name, link, alt)=>{popupWithImage.open(name, link, alt)});
-  return section.addItem(card.setCardElement());
+  return card.setCardElement();
 }
 
 section.renderItems();
