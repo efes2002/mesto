@@ -6,32 +6,14 @@ export const settingsValidate = {
   inputErrorClass: 'form__input_type_error',
   errorClass: 'form__error_visible'
 };
-export const initialCards = [
-  {
-    name: 'Архыз',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg'
-  },
-  {
-    name: 'Челябинская область',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg'
-  },
-  {
-    name: 'Иваново',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg'
-  },
-  {
-    name: 'Камчатка',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg'
-  },
-  {
-    name: 'Холмогорский район',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg'
-  },
-  {
-    name: 'Байкал',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
-  }
-];
+
+
+export const settingsProfile = {
+
+  nameClassProfileAvatar: 'profile__avatar',
+
+};
+
 export const settingsCard = {
   nameIdTemplateCard: 'template-card',
   nameClassCardElement: 'element',
@@ -40,8 +22,10 @@ export const settingsCard = {
   nameClassCardButtonLike: 'element__like',
   nameClassCardButtonDelete: 'element__delete',
   nameClassCardButtonLikeAction: 'element__like_action',
-  nameClassInsertForCard: 'places__elements'
+  nameClassInsertForCard: 'places__elements',
+  nameClassLikeNumber: 'element__like-number'
 };
+
 export const settingsPopup = {
   nameClassPopupOpen: 'popup_opened',
   nameClassPopupButtonX: 'popup__button-x',

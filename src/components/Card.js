@@ -8,10 +8,12 @@ export class Card {
     this._elementCardText = this._cardElement.querySelector(`.${settingsCard.nameClassCardTitle}`);
     this._elementCardButtonDelete = this._cardElement.querySelector(`.${settingsCard.nameClassCardButtonDelete}`);
     this._elementCardButtonLike = this._cardElement.querySelector(`.${settingsCard.nameClassCardButtonLike}`);
+    this._elementCardLikeNumber = this._cardElement.querySelector(`.${settingsCard.nameClassLikeNumber}`);
     this._nameClassCardButtonLikeAction= settingsCard.nameClassCardButtonLikeAction;
     this._name = data.name;
     this._link = data.link;
     this._alt = `Фотография ${data.name}`;
+    this._likeNumber = data.likeNumber;
     this.nameClassInsertForCard = settingsCard.nameClassInsertForCard;
     this._openPopupCardView = openPopupCardView;
   }
@@ -20,6 +22,7 @@ export class Card {
     this._elementCardImg.src = this._link;
     this._elementCardImg.alt = this._alt;
     this._elementCardText.textContent = this._name;
+    this._elementCardLikeNumber.textContent = this._likeNumber;
   }
 
   _openPopup() {

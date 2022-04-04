@@ -2,12 +2,30 @@ import { Card } from '../components/Card.js';
 import { PopupWithImage } from '../components/PopupWithImage.js';
 import { PopupWithForm } from '../components/PopupWithForm.js';
 import { UserInfo } from '../components/UserInfo.js';
-import { FormValidator } from "../components/FormValidator.js";
-import { Section } from "../components/Section.js";
-import {initialCards, settingsCard,
+import { FormValidator } from '../components/FormValidator.js';
+import { Section } from '../components/Section.js';
+import { Api } from '../components/Api.js'
+import {
+  initialCards, settingsCard,
   settingsPopUpProfile, settingsPopUpCard,
-  settingsPopUpCardView,settingsValidate} from '../scripts/constants.js';
+  settingsPopUpCardView, settingsValidate, settingsProfile
+} from '../scripts/constants.js';
+import { optionsApi } from '../scripts/config.js'
 import './index.css';
+
+const api = new Api(optionsApi);
+
+api.getProfile()
+  .then((res)=>{
+    userInfo.initialProfile({name : res.name, job : res.about, url: res.avatar})
+  })
+
+api.getInitialCards()
+  .then((res)=>{
+    const tempArr = res.map((item)=>{return {name: item.name, link: item.link, likeNumber: item.likes.length}});
+    section.renderItems(tempArr);
+  })
+
 
 const popupCardElement = document.querySelector(`#${settingsPopUpCard.nameIdPopUp}`);
 const popUpCardValidator = new FormValidator(settingsValidate, popupCardElement);
@@ -20,16 +38,12 @@ popUpProfileValidator.enableValidation();
 
 const userInfo = new UserInfo({
   nameSelector: `.${settingsPopUpProfile.nameClassProfileName}`,
-  jobSelector : `.${settingsPopUpProfile.nameClassProfileJob}`
+  jobSelector : `.${settingsPopUpProfile.nameClassProfileJob}`,
+  imgAvatar : `.${settingsProfile.nameClassProfileAvatar}`
 });
 
 const section = new Section(
-  {
-    items: initialCards,
-    renderer: (item) => {
-      section.addItem(renderCard(item));
-    }
-  },
+  {renderer: (item) => {section.addItem(renderCard(item));}},
   '.places__elements'
 );
 
@@ -37,8 +51,10 @@ export const popupWithImage = new PopupWithImage(`#${settingsPopUpCardView.nameI
 popupWithImage.setEventListeners();
 
 const callbackSubmitAddCard = function(data) {
-  const cardElement = renderCard({name: data.cardName, link: data.cardLink })
-  section.addItem(cardElement);
+  api.addNewCard({name: data.cardName, link: data.cardLink }).then((res)=>{
+    const cardElement = renderCard({name: res.name, link: res.link, likeNumber: 0 })
+    section.addItem(cardElement);
+  })
 }
 const popupFormAddCard = new PopupWithForm( `#${settingsPopUpCard.nameIdPopUp}`,callbackSubmitAddCard);
 popupFormAddCard.setEventListeners();
@@ -52,7 +68,11 @@ const callbackOpenEditProfile = function() {
 }
 
 const callbackSubmitEditProfile = function(data) {
-  userInfo.setUserInfo({name: data.profileName, job: data.profileJob})
+  api.editeProfile({name: data.profileName, about: data.profileJob})
+    .then((res)=>{
+      userInfo.setUserInfo({name: res.name, job: res.about})
+    })
+
 }
 const popupFormEditProfile = new PopupWithForm(
   `#${settingsPopUpProfile.nameIdPopUp}`,
@@ -77,4 +97,3 @@ function renderCard(item) {
   return card.setCardElement();
 }
 
-section.renderItems();
