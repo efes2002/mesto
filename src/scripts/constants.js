@@ -9,10 +9,12 @@ export const settingsValidate = {
 
 
 export const settingsProfile = {
-
   nameClassProfileAvatar: 'profile__avatar',
-
 };
+
+export const settingsPopupCardDelete = {
+  nameIdPopUp: 'popup-card-delete',
+}
 
 export const settingsCard = {
   nameIdTemplateCard: 'template-card',
@@ -23,7 +25,8 @@ export const settingsCard = {
   nameClassCardButtonDelete: 'element__delete',
   nameClassCardButtonLikeAction: 'element__like_action',
   nameClassInsertForCard: 'places__elements',
-  nameClassLikeNumber: 'element__like-number'
+  nameClassLikeNumber: 'element__like-number',
+  nameClassCardButtonDeleteAction: 'element__delete-action',
 };
 
 export const settingsPopup = {

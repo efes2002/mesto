@@ -1,5 +1,5 @@
 export class Card {
-  constructor(data, settingsCard, openPopupCardView){
+  constructor(data, settingsCard, openPopupCardView, idUser){
     this._cardElement = document
       .querySelector(`#${settingsCard.nameIdTemplateCard}`)
       .content.querySelector(`.${settingsCard.nameClassCardElement}`)
@@ -10,10 +10,14 @@ export class Card {
     this._elementCardButtonLike = this._cardElement.querySelector(`.${settingsCard.nameClassCardButtonLike}`);
     this._elementCardLikeNumber = this._cardElement.querySelector(`.${settingsCard.nameClassLikeNumber}`);
     this._nameClassCardButtonLikeAction= settingsCard.nameClassCardButtonLikeAction;
+    this._nameClassCardButtonDeleteAction = settingsCard.nameClassCardButtonDeleteAction;
+    this._idUser = idUser;
     this._name = data.name;
     this._link = data.link;
     this._alt = `Фотография ${data.name}`;
     this._likeNumber = data.likeNumber;
+    this._idCard = data.idCard;
+    this._idOwnerCard = data.idOwnerCard;
     this.nameClassInsertForCard = settingsCard.nameClassInsertForCard;
     this._openPopupCardView = openPopupCardView;
   }
@@ -23,6 +27,9 @@ export class Card {
     this._elementCardImg.alt = this._alt;
     this._elementCardText.textContent = this._name;
     this._elementCardLikeNumber.textContent = this._likeNumber;
+    if (this._idUser ===  this._idOwnerCard) {
+      this._elementCardButtonDelete.classList.toggle(this._nameClassCardButtonDeleteAction)
+    }
   }
 
   _openPopup() {

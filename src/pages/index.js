@@ -6,9 +6,8 @@ import { FormValidator } from '../components/FormValidator.js';
 import { Section } from '../components/Section.js';
 import { Api } from '../components/Api.js'
 import {
-  initialCards, settingsCard,
-  settingsPopUpProfile, settingsPopUpCard,
-  settingsPopUpCardView, settingsValidate, settingsProfile
+  settingsCard, settingsPopUpProfile, settingsPopUpCard,
+  settingsPopUpCardView, settingsValidate, settingsProfile, settingsPopupCardDelete
 } from '../scripts/constants.js';
 import { optionsApi } from '../scripts/config.js'
 import './index.css';
@@ -17,12 +16,23 @@ const api = new Api(optionsApi);
 
 api.getProfile()
   .then((res)=>{
-    userInfo.initialProfile({name : res.name, job : res.about, url: res.avatar})
+    userInfo.initialProfile({
+      name : res.name,
+      job : res.about,
+      url: res.avatar,
+      idUser: res._id
+    })
   })
 
 api.getInitialCards()
   .then((res)=>{
-    const tempArr = res.map((item)=>{return {name: item.name, link: item.link, likeNumber: item.likes.length}});
+    const tempArr = res.map((item)=>{return {
+      name: item.name,
+      link: item.link,
+      likeNumber: item.likes.length,
+      idCard: item._id,
+      idOwnerCard: item.owner._id
+    }});
     section.renderItems(tempArr);
   })
 
@@ -35,6 +45,10 @@ const popUpProfileValidator = new FormValidator(settingsValidate, popupProfileEl
 
 popUpCardValidator.enableValidation();
 popUpProfileValidator.enableValidation();
+
+const popupCardDeleteElement = document.querySelector(`#${settingsPopupCardDelete.nameIdPopUp}`);
+
+
 
 const userInfo = new UserInfo({
   nameSelector: `.${settingsPopUpProfile.nameClassProfileName}`,
@@ -52,7 +66,13 @@ popupWithImage.setEventListeners();
 
 const callbackSubmitAddCard = function(data) {
   api.addNewCard({name: data.cardName, link: data.cardLink }).then((res)=>{
-    const cardElement = renderCard({name: res.name, link: res.link, likeNumber: 0 })
+    const cardElement = renderCard({
+      name: res.name,
+      link: res.link,
+      likeNumber: 0,
+      idCard: res._id,
+      idOwnerCard: res.owner._id
+    })
     section.addItem(cardElement);
   })
 }
@@ -93,7 +113,12 @@ buttonOpenPopupProfileElement.addEventListener('click', ()=>{
 });
 
 function renderCard(item) {
-  const card = new Card(item, settingsCard, (name, link, alt)=>{popupWithImage.open(name, link, alt)});
+  const card = new Card(
+    item,
+    settingsCard,
+    (name, link, alt)=>{popupWithImage.open(name, link, alt)},
+    userInfo.getIdUser()
+  );
   return card.setCardElement();
 }
 

@@ -16,12 +16,17 @@ export class UserInfo{
     this._jobElement.textContent = job;
   }
 
-  initialProfile({name, job, url}) {
+  initialProfile({name, job, url, idUser}) {
     this.setUserInfo({name, job});
     this.setImgAvatar(url);
+    this._idUser = idUser;
   }
 
   setImgAvatar(url) {
     this._imgAvatar.src = url;
+  }
+
+  getIdUser() {
+    return this._idUser;
   }
 }
