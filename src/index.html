@@ -12,7 +12,10 @@
       </header>
       <main class="content">
         <section class="profile">
-          <img class="profile__avatar" src="<%=require('./images/foto-fedar-konuxov.jpg')%>" alt="Фотография аватара путешественника">
+          <div class="profile__avatar-box">
+            <img class="profile__avatar" src="<%=require('./images/foto-fedar-konuxov.jpg')%>" alt="Фотография аватара путешественника">
+            <button class="profile__edit-avatar-button cursor-hover"></button>
+          </div>
           <div class="profile__info">
             <div class="profile__title-box">
               <h1 class="profile__name"></h1>
@@ -108,8 +111,10 @@
     <div class="popup" id="popup-card-delete">
       <div class="popup__container">
         <div class="element-view">
+          <div class="form">
           <h2 class="form__title">Вы уверены?</h2>
           <button class="form__button">Да</button>
+          </div>
         </div>
         <div class="popup__button-x cursor-hover"></div>
       </div>

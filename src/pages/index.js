@@ -4,6 +4,7 @@ import { PopupWithForm } from '../components/PopupWithForm.js';
 import { UserInfo } from '../components/UserInfo.js';
 import { FormValidator } from '../components/FormValidator.js';
 import { Section } from '../components/Section.js';
+import {PopupCardDelete} from "../components/PopupCardDelete.js";
 import { Api } from '../components/Api.js'
 import {
   settingsCard, settingsPopUpProfile, settingsPopUpCard,
@@ -26,13 +27,7 @@ api.getProfile()
 
 api.getInitialCards()
   .then((res)=>{
-    const tempArr = res.map((item)=>{return {
-      name: item.name,
-      link: item.link,
-      likeNumber: item.likes.length,
-      idCard: item._id,
-      idOwnerCard: item.owner._id
-    }});
+    const tempArr = res.map((item)=>{return item});
     section.renderItems(tempArr);
   })
 
@@ -46,9 +41,8 @@ const popUpProfileValidator = new FormValidator(settingsValidate, popupProfileEl
 popUpCardValidator.enableValidation();
 popUpProfileValidator.enableValidation();
 
-const popupCardDeleteElement = document.querySelector(`#${settingsPopupCardDelete.nameIdPopUp}`);
-
-
+const popupCardDelete = new PopupCardDelete(`#${settingsPopupCardDelete.nameIdPopUp}`)
+popupCardDelete.setEventListeners();
 
 const userInfo = new UserInfo({
   nameSelector: `.${settingsPopUpProfile.nameClassProfileName}`,
@@ -66,13 +60,7 @@ popupWithImage.setEventListeners();
 
 const callbackSubmitAddCard = function(data) {
   api.addNewCard({name: data.cardName, link: data.cardLink }).then((res)=>{
-    const cardElement = renderCard({
-      name: res.name,
-      link: res.link,
-      likeNumber: 0,
-      idCard: res._id,
-      idOwnerCard: res.owner._id
-    })
+    const cardElement = renderCard(res)
     section.addItem(cardElement);
   })
 }
@@ -116,7 +104,25 @@ function renderCard(item) {
   const card = new Card(
     item,
     settingsCard,
-    (name, link, alt)=>{popupWithImage.open(name, link, alt)},
+    (name, link, alt) => {popupWithImage.open(name, link, alt)},
+    (deleteElement, id) => {
+      popupCardDelete.open(()=>{
+        api.deleteCard(id)
+          .then(()=>{deleteElement()})
+      })
+    },
+    (id, updateCard)=>{
+      api.addLike(id)
+        .then((res)=> {
+          updateCard(res);
+        })
+    },
+    (id, updateCard)=>{
+      api.deleteLike(id)
+        .then((res)=> {
+          updateCard(res);
+        })
+    },
     userInfo.getIdUser()
   );
   return card.setCardElement();

@@ -14,6 +14,8 @@ export const settingsProfile = {
 
 export const settingsPopupCardDelete = {
   nameIdPopUp: 'popup-card-delete',
+  nameClassPopupButton: 'form__button',
+
 }
 
 export const settingsCard = {

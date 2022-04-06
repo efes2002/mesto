@@ -1,5 +1,7 @@
 export class Card {
-  constructor(data, settingsCard, openPopupCardView, idUser){
+  constructor(data, settingsCard,
+    openPopupCardView, openPopupCardDelete,
+    callBackAddLike, callBackDeleteLike, idUser) {
     this._cardElement = document
       .querySelector(`#${settingsCard.nameIdTemplateCard}`)
       .content.querySelector(`.${settingsCard.nameClassCardElement}`)
@@ -15,21 +17,26 @@ export class Card {
     this._name = data.name;
     this._link = data.link;
     this._alt = `Фотография ${data.name}`;
-    this._likeNumber = data.likeNumber;
-    this._idCard = data.idCard;
-    this._idOwnerCard = data.idOwnerCard;
+    this._likeNumber = data.likes.length;
+    this._idCard = data._id;
+    this._idOwnerCard = data.owner._id;
+    this._isMyLike = data.likes.filter(item => item._id === this._idUser).length === 1;
     this.nameClassInsertForCard = settingsCard.nameClassInsertForCard;
     this._openPopupCardView = openPopupCardView;
+    this._openPopupCardDelete = openPopupCardDelete;
+    this._callBackAddLike = callBackAddLike;
+    this._callBackDeleteLike = callBackDeleteLike;
   }
 
   _fillCardElement() {
     this._elementCardImg.src = this._link;
     this._elementCardImg.alt = this._alt;
     this._elementCardText.textContent = this._name;
-    this._elementCardLikeNumber.textContent = this._likeNumber;
+    this._updateLikeNumber();
     if (this._idUser ===  this._idOwnerCard) {
       this._elementCardButtonDelete.classList.toggle(this._nameClassCardButtonDeleteAction)
     }
+    this._toggleLike();
   }
 
   _openPopup() {
@@ -41,13 +48,39 @@ export class Card {
   }
 
   _toggleLike() {
-    this._elementCardButtonLike.classList.toggle(this._nameClassCardButtonLikeAction);
+    if (this._isMyLike) {
+      this._elementCardButtonLike.classList.add(this._nameClassCardButtonLikeAction);
+    }
+    else {
+      this._elementCardButtonLike.classList.remove(this._nameClassCardButtonLikeAction);
+    }
+  }
+
+  _updateLikeNumber() {
+    this._elementCardLikeNumber.textContent = this._likeNumber;
+  }
+
+  _updateCard(item) {
+    this._likeNumber = item.likes.length;
+    this._isMyLike = item.likes.filter(item => item._id === this._idUser).length === 1;
+    this._fillCardElement();
   }
 
   _addEventListener() {
-    this._elementCardImg.addEventListener('click', ()=>{this._openPopup()});
-    this._elementCardButtonDelete.addEventListener('click', ()=>{this._deleteElement()});
-    this._elementCardButtonLike.addEventListener('click', ()=>{this._toggleLike()});
+    this._elementCardImg.addEventListener('click', () => {this._openPopup()});
+
+    this._elementCardButtonDelete.addEventListener('click', () => {
+      this._openPopupCardDelete(() => {this._deleteElement()}, this._idCard);
+    });
+
+    this._elementCardButtonLike.addEventListener('click', () => {
+      if (this._isMyLike) {
+        this._callBackDeleteLike(this._idCard, (item)=>{this._updateCard(item)});
+      }
+      else {
+        this._callBackAddLike(this._idCard, (item)=>{this._updateCard(item)});
+      }
+    });
   }
 
   setCardElement() {
