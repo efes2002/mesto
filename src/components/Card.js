@@ -34,7 +34,9 @@ export class Card {
     this._elementCardText.textContent = this._name;
     this._updateLikeNumber();
     if (this._idUser ===  this._idOwnerCard) {
-      this._elementCardButtonDelete.classList.toggle(this._nameClassCardButtonDeleteAction)
+      this._elementCardButtonDelete.classList.add(this._nameClassCardButtonDeleteAction)
+    }
+    else {this._elementCardButtonDelete.classList.remove(this._nameClassCardButtonDeleteAction)
     }
     this._toggleLike();
   }

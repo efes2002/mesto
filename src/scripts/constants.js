@@ -7,7 +7,6 @@ export const settingsValidate = {
   errorClass: 'form__error_visible'
 };
 
-
 export const settingsProfile = {
   nameClassProfileAvatar: 'profile__avatar',
 };
@@ -15,7 +14,6 @@ export const settingsProfile = {
 export const settingsPopupCardDelete = {
   nameIdPopUp: 'popup-card-delete',
   nameClassPopupButton: 'form__button',
-
 }
 
 export const settingsCard = {
@@ -55,6 +53,7 @@ export const settingsPopUpProfile = {
   nameClassButtonOpenPopUp:'profile__edit-button',
   inputSelector: '.form__input',
 };
+
 export const settingsPopUpCard = {
   nameIdPopUp: 'popup-add-card',
   nameClassPopUpOpen: 'popup_opened',
@@ -67,6 +66,19 @@ export const settingsPopUpCard = {
   nameClassButtonOpenPopUp:'profile__add-button',
   inputSelector: '.form__input',
 };
+
+export const settingsPopupEditAvatar = {
+  nameIdPopUp: 'popup-edit-avatar',
+  nameClassPopUpOpen: 'popup_opened',
+  nameClassPopUpButtonX: 'popup__button-x',
+  nameClassPopUpForm: 'form',
+  nameClassPopUpFormButton: 'form__button',
+  nameClassPopUpFormButtonDisabled: 'disabled',
+  nameIdPopUpFormLink: 'avatarLink',
+  nameClassButtonOpenPopUp:'profile__edit-avatar-button',
+  inputSelector: '.form__input',
+};
+
 export const settingsPopUpCardView = {
   nameIdPopUp: 'popup-card-view',
   nameClassPopUpOpen: 'popup_opened',

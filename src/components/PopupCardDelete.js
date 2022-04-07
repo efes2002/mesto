@@ -4,14 +4,17 @@ import { Popup } from './Popup.js';
 export class PopupCardDelete extends Popup {
   constructor(popupSelector) {
     super(popupSelector);
-    this._buttonElement = this._popupElement.querySelector(`.${settingsPopupCardDelete.nameClassPopupButton}`)
+    this._buttonElement = this._popupElement.querySelector(`.${settingsPopupCardDelete.nameClassPopupButton}`);
   }
 
   setEventListeners() {
     this._buttonElement.addEventListener('click', (event)=>{
       event.preventDefault();
-      this._callBackCardDelete();
-      super.close();
+      this._buttonElement.textContent = "Удаление..."
+      this._callBackCardDelete(()=>{
+        super.close();
+        this._buttonElement.textContent = "Да"
+      });
     });
     super.setEventListeners();
   }
