@@ -6,11 +6,11 @@ export class Card {
       .querySelector(`#${settingsCard.nameIdTemplateCard}`)
       .content.querySelector(`.${settingsCard.nameClassCardElement}`)
       .cloneNode(true);
-    this._elementCardImg = this._cardElement.querySelector(`.${settingsCard.nameClassCardImg}`);
-    this._elementCardText = this._cardElement.querySelector(`.${settingsCard.nameClassCardTitle}`);
-    this._elementCardButtonDelete = this._cardElement.querySelector(`.${settingsCard.nameClassCardButtonDelete}`);
-    this._elementCardButtonLike = this._cardElement.querySelector(`.${settingsCard.nameClassCardButtonLike}`);
-    this._elementCardLikeNumber = this._cardElement.querySelector(`.${settingsCard.nameClassLikeNumber}`);
+    this._cardImg = this._cardElement.querySelector(`.${settingsCard.nameClassCardImg}`);
+    this._cardTitle = this._cardElement.querySelector(`.${settingsCard.nameClassCardTitle}`);
+    this._cardButtonDelete = this._cardElement.querySelector(`.${settingsCard.nameClassCardButtonDelete}`);
+    this._cardButtonLike = this._cardElement.querySelector(`.${settingsCard.nameClassCardButtonLike}`);
+    this._cardLikeNumber = this._cardElement.querySelector(`.${settingsCard.nameClassLikeNumber}`);
     this._nameClassCardButtonLikeAction= settingsCard.nameClassCardButtonLikeAction;
     this._nameClassCardButtonDeleteAction = settingsCard.nameClassCardButtonDeleteAction;
     this._idUser = idUser;
@@ -21,7 +21,6 @@ export class Card {
     this._idCard = data._id;
     this._idOwnerCard = data.owner._id;
     this._isMyLike = data.likes.filter(item => item._id === this._idUser).length === 1;
-    this.nameClassInsertForCard = settingsCard.nameClassInsertForCard;
     this._openPopupCardView = openPopupCardView;
     this._openPopupCardDelete = openPopupCardDelete;
     this._callBackAddLike = callBackAddLike;
@@ -29,14 +28,14 @@ export class Card {
   }
 
   _fillCardElement() {
-    this._elementCardImg.src = this._link;
-    this._elementCardImg.alt = this._alt;
-    this._elementCardText.textContent = this._name;
+    this._cardImg.src = this._link;
+    this._cardImg.alt = this._alt;
+    this._cardTitle.textContent = this._name;
     this._updateLikeNumber();
     if (this._idUser ===  this._idOwnerCard) {
-      this._elementCardButtonDelete.classList.add(this._nameClassCardButtonDeleteAction)
+      this._cardButtonDelete.classList.add(this._nameClassCardButtonDeleteAction)
     }
-    else {this._elementCardButtonDelete.classList.remove(this._nameClassCardButtonDeleteAction)
+    else {this._cardButtonDelete.classList.remove(this._nameClassCardButtonDeleteAction)
     }
     this._toggleLike();
   }
@@ -51,15 +50,15 @@ export class Card {
 
   _toggleLike() {
     if (this._isMyLike) {
-      this._elementCardButtonLike.classList.add(this._nameClassCardButtonLikeAction);
+      this._cardButtonLike.classList.add(this._nameClassCardButtonLikeAction);
     }
     else {
-      this._elementCardButtonLike.classList.remove(this._nameClassCardButtonLikeAction);
+      this._cardButtonLike.classList.remove(this._nameClassCardButtonLikeAction);
     }
   }
 
   _updateLikeNumber() {
-    this._elementCardLikeNumber.textContent = this._likeNumber;
+    this._cardLikeNumber.textContent = this._likeNumber;
   }
 
   _updateCard(item) {
@@ -69,13 +68,13 @@ export class Card {
   }
 
   _addEventListener() {
-    this._elementCardImg.addEventListener('click', () => {this._openPopup()});
+    this._cardImg.addEventListener('click', () => {this._openPopup()});
 
-    this._elementCardButtonDelete.addEventListener('click', () => {
+    this._cardButtonDelete.addEventListener('click', () => {
       this._openPopupCardDelete(() => {this._deleteElement()}, this._idCard);
     });
 
-    this._elementCardButtonLike.addEventListener('click', () => {
+    this._cardButtonLike.addEventListener('click', () => {
       if (this._isMyLike) {
         this._callBackDeleteLike(this._idCard, (item)=>{this._updateCard(item)});
       }

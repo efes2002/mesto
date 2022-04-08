@@ -12,26 +12,6 @@ import { settingsCard, settingsPopUpProfile, settingsPopUpCard,
 import { optionsApi } from '../scripts/config.js'
 import './index.css';
 
-const api = new Api(optionsApi);
-
-api.getProfile()
-  .then((res)=>{
-    userInfo.initialProfile({
-      name : res.name,
-      job : res.about,
-      url: res.avatar,
-      idUser: res._id
-    })
-  })
-  .catch((err) => {console.log(err);})
-
-api.getInitialCards()
-  .then((res)=>{
-    const tempArr = res.map((item)=>{return item});
-    section.renderItems(tempArr);
-  })
-  .catch((err) => {console.log(err);})
-
 const popupCardElement = document.querySelector(`#${settingsPopUpCard.nameIdPopUp}`);
 const popUpCardValidator = new FormValidator(settingsValidate, popupCardElement);
 
@@ -40,6 +20,24 @@ const popUpProfileValidator = new FormValidator(settingsValidate, popupProfileEl
 
 const popupEditAvatarElement = document.querySelector(`#${settingsPopupEditAvatar.nameIdPopUp}`);
 const popUpEditAvatarValidator = new FormValidator(settingsValidate, popupEditAvatarElement);
+
+const buttonOpenPopupCardElement = document.querySelector(`.${settingsPopUpCard.nameClassButtonOpenPopUp}`);
+const buttonOpenPopupProfileElement = document.querySelector(`.${settingsPopUpProfile.nameClassButtonOpenPopUp}`);
+const buttonOpenPopupEditAvatarElement = document.querySelector(`.${settingsPopupEditAvatar.nameClassButtonOpenPopUp}`);
+
+const api = new Api(optionsApi);
+const checkCatch = (err) => {console.log(err);}
+
+Promise.all([api.getProfile(), api.getInitialCards()])
+  .then((arr)=>{
+    userInfo.setUserInfo({
+      name : arr[0].name, job : arr[0].about,
+      url: arr[0].avatar, idUser: arr[0]._id
+    });
+    const tempArr = arr[1].map((item)=>{return item});
+    section.renderItems(tempArr);
+  })
+  .catch(checkCatch)
 
 popUpCardValidator.enableValidation();
 popUpProfileValidator.enableValidation();
@@ -67,28 +65,27 @@ const callbackSubmitAddCard = function(data, callbackClose) {
     .then((res)=>{
       const cardElement = renderCard(res)
       section.addItem(cardElement);
-      callbackClose("Создать");
+      callbackClose();
     })
-    .catch((err) => {console.log(err);})
+    .catch(checkCatch)
 }
 const popupFormAddCard = new PopupWithForm( `#${settingsPopUpCard.nameIdPopUp}`, callbackSubmitAddCard);
 popupFormAddCard.setEventListeners();
 
 const callbackOpenEditProfile = function() {
   const {name, job} = userInfo.getUserInfo();
-  const popupProfileNameElement = this._popupElement.querySelector(`#${settingsPopUpProfile.nameIdPopUpFormName}`);
-  const popupProfileJobElement = this._popupElement.querySelector(`#${settingsPopUpProfile.nameIdPopUpFormJob}`);
-  popupProfileNameElement.value = name;
-  popupProfileJobElement.value = job;
+  popupFormEditProfile.setInputValues({name, job});
 }
 const callbackSubmitEditProfile = function(data, callbackClose) {
-  api.editeProfile({name: data.profileName, about: data.profileJob})
+  api.editProfile({name: data.profileName, about: data.profileJob})
     .then((res)=>{
-      userInfo.setUserInfo({name: res.name, job: res.about});
-      callbackClose("Сохранить");
+      userInfo.setUserInfo({
+        name: res.name, job: res.about,
+        url: res.avatar, idUser: res._id
+      });
+      callbackClose();
     })
-    .catch((err) => {console.log(err);})
-
+    .catch(checkCatch)
 }
 const popupFormEditProfile = new PopupWithForm(
   `#${settingsPopUpProfile.nameIdPopUp}`,
@@ -100,28 +97,23 @@ const callbackSubmitEditAvatar = function(data, callbackClose) {
   api.editAvatar(data.avatarLink)
     .then((res)=>{
       userInfo.setImgAvatar(res.avatar);
-      callbackClose("Сохранить");
+      callbackClose();
     })
-    .catch((err) => {console.log(err);})
+    .catch(checkCatch)
 }
 const popupFormEditAvatar = new PopupWithForm( `#${settingsPopupEditAvatar.nameIdPopUp}`, callbackSubmitEditAvatar);
 popupFormEditAvatar.setEventListeners();
 
-const buttonOpenPopupCardElement = document.querySelector(`.${settingsPopUpCard.nameClassButtonOpenPopUp}`);
-const buttonOpenPopupProfileElement = document.querySelector(`.${settingsPopUpProfile.nameClassButtonOpenPopUp}`);
-const buttonOpenPopupEditAvatarElement = document.querySelector(`.${settingsPopupEditAvatar.nameClassButtonOpenPopUp}`);
-
-
 buttonOpenPopupCardElement.addEventListener('click', ()=>{
-  popUpCardValidator.startHideInputError();
+  popUpCardValidator.resetValidation();
   popupFormAddCard.open();
 });
 buttonOpenPopupProfileElement.addEventListener('click', ()=>{
-  popUpProfileValidator.startHideInputError();
+  popUpProfileValidator.resetValidation();
   popupFormEditProfile.open();
 });
 buttonOpenPopupEditAvatarElement.addEventListener('click', ()=>{
-  popUpEditAvatarValidator.startHideInputError();
+  popUpEditAvatarValidator.resetValidation();
   popupFormEditAvatar.open();
 });
 
@@ -134,18 +126,17 @@ function renderCard(item) {
       popupCardDelete.open((callbackClose) => {
         api.deleteCard(id)
           .then(() => {deleteElement(); callbackClose();})
-          .catch((err) => {console.log(err);})
+          .catch(checkCatch)
       })
     },
     (id, updateCard) => {
       api.addLike(id)
         .then((res) => {updateCard(res);})
-        .catch((err) => {console.log(err);})
-    },
-    (id, updateCard) => {
+        .catch(checkCatch)
+    },    (id, updateCard) => {
       api.deleteLike(id)
         .then((res) => {updateCard(res);})
-        .catch((err) => {console.log(err);})
+        .catch(checkCatch)
     },
     userInfo.getIdUser()
   );

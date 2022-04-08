@@ -6,7 +6,7 @@ export class FormValidator {
     this._buttonElement = this._formElement.querySelector(this._arg.submitButtonSelector);
   }
 
-  startHideInputError() {
+  resetValidation() {
     this._inputList.forEach((input)=>{
       this._hideInputError(input);
     });

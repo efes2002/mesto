@@ -11,15 +11,11 @@ export class UserInfo{
     return {name: name, job: job}
   }
 
-  setUserInfo({name, job}) {
+  setUserInfo({name, job, url, idUser}) {
     this._nameElement.textContent = name;
     this._jobElement.textContent = job;
-  }
-
-  initialProfile({name, job, url, idUser}) {
-    this.setUserInfo({name, job});
-    this.setImgAvatar(url);
     this._idUser = idUser;
+    this.setImgAvatar(url);
   }
 
   setImgAvatar(url) {
